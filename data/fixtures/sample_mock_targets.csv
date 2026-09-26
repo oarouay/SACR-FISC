@@ -1,0 +1,11 @@
+url,priority
+http://backend:8000/mock/100982736451001.html,25
+http://backend:8000/mock/100555888999333.html,25
+http://backend:8000/mock/100888333444555.html,20
+http://backend:8000/mock/100222333444999.html,20
+http://backend:8000/mock/100444555666111.html,15
+http://backend:8000/mock/100666777888555.html,15
+http://backend:8000/mock/100999000111222.html,15
+http://backend:8000/mock/100333666999000.html,10
+http://backend:8000/mock/100777666555444.html,10
+http://backend:8000/mock/100111222333000.html,10

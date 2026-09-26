@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 overflow-y-scroll min-h-screen pt-14">
+    <!-- Top Navigation (Fixed) -->
+    <nav class="fixed top-0 z-50 w-full bg-white h-14 shadow-sm border-b border-gray-200 flex items-center justify-between px-4">
+        <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl"><i class="fab fa-facebook-f"></i></div>
+            <!-- Search with Dropdown -->
+            <div class="relative hidden sm:block group z-50">
+                <i class="fas fa-search absolute left-3 top-2.5 text-gray-500"></i>
+                <input type="text" placeholder="Search Facebook" class="bg-gray-100 rounded-full py-2 pl-9 pr-4 focus:outline-none w-60">
+                <div class="absolute top-full left-0 mt-1 w-80 bg-white border border-gray-200 shadow-2xl rounded-lg hidden group-hover:block group-focus-within:block transition-all z-50">
+                    <div class="p-3 text-sm font-bold text-gray-500 border-b border-gray-100">Recent Searches</div>
+                    <div class="max-h-96 overflow-y-auto">
+                        <a href="100982736451001.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Fashyoun/40/40" class="rounded-full w-8 h-8"> Boutique Fashyoun Tounes</a>
+                        <a href="100888333444555.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Electro/40/40" class="rounded-full w-8 h-8"> Electro Tounes Officiel</a>
+                        <a href="100222333444999.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Cosmetique/40/40" class="rounded-full w-8 h-8"> Grossiste Cosmétique Sfax</a>
+                        <a href="100777666555444.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Amina/40/40" class="rounded-full w-8 h-8"> Créations Amina</a>
+                        <a href="100444555666111.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Sneaker/40/40" class="rounded-full w-8 h-8"> SneakerHead TN</a>
+                        <a href="100111222333000.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Savoir/40/40" class="rounded-full w-8 h-8"> Librairie Le Savoir</a>
+                        <a href="100555888999333.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Deco/40/40" class="rounded-full w-8 h-8"> Meubles Déco Luxe</a>
+                        <a href="100999000111222.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Frippe/40/40" class="rounded-full w-8 h-8"> Frippe En Ligne Bizerte</a>
+                        <a href="100333666999000.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Auto/40/40" class="rounded-full w-8 h-8"> Pièces Auto Rapide</a>
+                        <a href="100666777888555.html" class="flex items-center gap-3 p-3 hover:bg-gray-100 text-black font-medium"><img src="https://picsum.photos/seed/Parfum/40/40" class="rounded-full w-8 h-8"> Parfum Magique</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center gap-1 sm:gap-2 text-gray-500 text-xl hidden md:flex">
+            <div class="w-24 h-12 flex items-center justify-center border-b-2 border-blue-600 text-blue-600"><i class="fas fa-home"></i></div>
+            <div class="w-24 h-12 flex items-center justify-center hover:bg-gray-100 rounded-lg cursor-pointer"><i class="fas fa-tv"></i></div>
+            <div class="w-24 h-12 flex items-center justify-center hover:bg-gray-100 rounded-lg cursor-pointer"><i class="fas fa-store"></i></div>
+            <div class="w-24 h-12 flex items-center justify-center hover:bg-gray-100 rounded-lg cursor-pointer"><i class="fas fa-users"></i></div>
+            <div class="w-24 h-12 flex items-center justify-center hover:bg-gray-100 rounded-lg cursor-pointer"><i class="fas fa-gamepad"></i></div>
+        </div>
+        <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-300"><i class="fas fa-bars"></i></div>
+            <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-300"><i class="fab fa-facebook-messenger"></i></div>
+            <div class="relative w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-300">
+                <i class="fas fa-bell"></i>
+                <div class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center border-2 border-white">3</div>
+            </div>
+            <img src="https://i.pravatar.cc/150?u=99" class="w-10 h-10 rounded-full cursor-pointer ml-1" alt="Profile">
+        </div>
+    </nav>
+
+    <!-- 3-Column Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-[1600px] mx-auto px-4 mt-4">
+
+        <!-- Left Column -->
+        <div class="hidden md:block col-span-1 fixed w-[280px] h-[calc(100vh-60px)] overflow-y-auto pb-4">
+            <ul class="space-y-1">
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-semibold"><img src="https://i.pravatar.cc/150?u=99" class="w-9 h-9 rounded-full" alt="You"> Agent OSINT</li>
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-medium text-[15px]"><i class="fas fa-user-friends text-blue-500 text-xl w-6"></i> Friends</li>
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-medium text-[15px]"><i class="fas fa-history text-blue-500 text-xl w-6"></i> Memories</li>
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-medium text-[15px]"><i class="fas fa-users text-blue-500 text-xl w-6"></i> Groups</li>
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-medium text-[15px]"><i class="fas fa-store text-blue-500 text-xl w-6"></i> Marketplace</li>
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-medium text-[15px]"><i class="fas fa-tv text-blue-500 text-xl w-6"></i> Watch</li>
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-medium text-[15px]"><i class="fas fa-chevron-down text-gray-500 bg-gray-300 rounded-full w-6 h-6 flex items-center justify-center"></i> See more</li>
+            </ul>
+            <hr class="border-gray-300 my-3 ml-2 mr-4">
+            <h3 class="text-gray-500 font-semibold px-2 mb-2 text-lg">Your shortcuts</h3>
+            <ul class="space-y-1">
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-medium text-[15px]"><img src="https://picsum.photos/40/40?random=11" class="w-9 h-9 rounded-md" alt=""> Tunis Events</li>
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-medium text-[15px]"><img src="https://picsum.photos/40/40?random=12" class="w-9 h-9 rounded-md" alt=""> Vente &amp; Achat</li>
+                <li class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer font-medium text-[15px]"><img src="https://picsum.photos/40/40?random=13" class="w-9 h-9 rounded-md" alt=""> IT Jobs</li>
+            </ul>
+        </div>
+
+        <!-- Center Column -->
+        <div class="col-span-1 md:col-span-2 md:ml-[300px] lg:ml-[300px] max-w-[680px] w-full mx-auto">
+
+            <!-- Create a Post -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-4">
+                <div class="flex items-center gap-3">
+                    <img src="https://i.pravatar.cc/150?u=99" class="w-10 h-10 rounded-full" alt="You">
+                    <div class="flex-1 bg-gray-100 rounded-full px-4 py-2.5 text-gray-500 hover:bg-gray-200 cursor-pointer text-[15px]">What's on your mind?</div>
+                </div>
+                <hr class="my-3 border-gray-200">
+                <div class="flex justify-between">
+                    <button class="flex-1 flex items-center justify-center gap-2 py-2 hover:bg-gray-100 rounded-lg text-gray-600 font-semibold text-[15px]">
+                        <i class="fas fa-video text-red-500"></i> Live Video
+                    </button>
+                    <button class="flex-1 flex items-center justify-center gap-2 py-2 hover:bg-gray-100 rounded-lg text-gray-600 font-semibold text-[15px]">
+                        <i class="fas fa-images text-green-500"></i> Photo/Video
+                    </button>
+                    <button class="flex-1 flex items-center justify-center gap-2 py-2 hover:bg-gray-100 rounded-lg text-gray-600 font-semibold text-[15px]">
+                        <i class="far fa-smile text-yellow-500"></i> Feeling/Activity
+                    </button>
+                </div>
+            </div>
+
+            <!-- News Feed Post 1 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-4">
+                <div class="px-4 pt-3 flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                        <img src="https://i.pravatar.cc/150?u=55" class="w-10 h-10 rounded-full border border-gray-200" alt="Amine">
+                        <div class="flex flex-col">
+                            <h3 class="font-bold text-[15px]">Amine Bouzid</h3>
+                            <p class="text-[13px] text-gray-500 flex items-center gap-1">2 hours ago • <i class="fas fa-globe-americas text-xs"></i></p>
+                        </div>
+                    </div>
+                    <div class="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center cursor-pointer text-gray-600"><i class="fas fa-ellipsis-h"></i></div>
+                </div>
+                <div class="px-4 mb-3 text-[15px]">
+                    Magnifique journée à Sidi Bou Said 🇹🇳☀️ La vue depuis le café est incroyable.
+                </div>
+                <div class="relative w-full h-96 bg-gray-200">
+                    <img src="https://images.unsplash.com/photo-1572204097183-e1ab140342ed?auto=format&fit=crop&w=800&q=80" class="w-full h-96 object-cover" alt="Sidi Bou Said">
+                </div>
+                <div class="px-4 py-2 flex justify-between items-center text-gray-500 border-b text-[15px]">
+                    <div class="flex items-center gap-1">
+                        <div class="w-[18px] h-[18px] rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] z-10"><i class="fas fa-thumbs-up"></i></div>
+                        <div class="w-[18px] h-[18px] rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] -ml-2 z-0"><i class="fas fa-heart"></i></div>
+                        <span class="ml-1">342</span>
+                    </div>
+                    <div class="hover:underline cursor-pointer">48 Comments • 6 Shares</div>
+                </div>
+                <div class="px-4 py-1 flex justify-between text-gray-600 font-semibold text-[15px] border-b">
+                    <button class="flex-1 py-1.5 hover:bg-gray-100 rounded-md flex items-center justify-center gap-2"><i class="far fa-thumbs-up text-lg"></i> Like</button>
+                    <button class="flex-1 py-1.5 hover:bg-gray-100 rounded-md flex items-center justify-center gap-2"><i class="far fa-comment text-lg"></i> Comment</button>
+                    <button class="flex-1 py-1.5 hover:bg-gray-100 rounded flex items-center justify-center gap-2"><i class="fas fa-share text-lg"></i> Share</button>
+                </div>
+                <div class="px-4 py-3">
+                    <div class="flex gap-2 items-center">
+                        <img src="https://i.pravatar.cc/150?u=99" class="w-8 h-8 rounded-full" alt="You">
+                        <div class="w-full bg-gray-100 rounded-full px-3 py-2 text-[15px] text-gray-500 flex items-center justify-between">
+                            <span>Write a comment...</span>
+                            <div class="flex gap-2"><i class="far fa-smile"></i><i class="fas fa-camera"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Feed Post 2 -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 mb-4">
+                <div class="px-4 pt-3 flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-2">
+                        <img src="https://i.pravatar.cc/150?u=66" class="w-10 h-10 rounded-full border border-gray-200" alt="Salma">
+                        <div class="flex flex-col">
+                            <h3 class="font-bold text-[15px]">Salma Khemiri</h3>
+                            <p class="text-[13px] text-gray-500 flex items-center gap-1">5 hours ago • <i class="fas fa-globe-americas text-xs"></i></p>
+                        </div>
+                    </div>
+                    <div class="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center cursor-pointer text-gray-600"><i class="fas fa-ellipsis-h"></i></div>
+                </div>
+                <div class="px-4 mb-3 text-[15px]">
+                    Weekend vibes 🎉 Qui veut un couscous ce soir? 😂
+                </div>
+                <div class="relative w-full h-96 bg-gray-200">
+                    <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?auto=format&fit=crop&w=800&q=80" class="w-full h-96 object-cover" alt="Couscous">
+                </div>
+                <div class="px-4 py-2 flex justify-between items-center text-gray-500 border-b text-[15px]">
+                    <div class="flex items-center gap-1">
+                        <div class="w-[18px] h-[18px] rounded-full bg-blue-500 flex items-center justify-center text-white text-[10px] z-10"><i class="fas fa-thumbs-up"></i></div>
+                        <div class="w-[18px] h-[18px] rounded-full bg-red-500 flex items-center justify-center text-white text-[10px] -ml-2 z-0"><i class="fas fa-heart"></i></div>
+                        <span class="ml-1">1.2K</span>
+                    </div>
+                    <div class="hover:underline cursor-pointer">210 Comments • 34 Shares</div>
+                </div>
+                <div class="px-4 py-1 flex justify-between text-gray-600 font-semibold text-[15px] border-b">
+                    <button class="flex-1 py-1.5 hover:bg-gray-100 rounded-md flex items-center justify-center gap-2"><i class="far fa-thumbs-up text-lg"></i> Like</button>
+                    <button class="flex-1 py-1.5 hover:bg-gray-100 rounded-md flex items-center justify-center gap-2"><i class="far fa-comment text-lg"></i> Comment</button>
+                    <button class="flex-1 py-1.5 hover:bg-gray-100 rounded flex items-center justify-center gap-2"><i class="fas fa-share text-lg"></i> Share</button>
+                </div>
+                <div class="px-4 py-3">
+                    <div class="flex gap-2 items-center">
+                        <img src="https://i.pravatar.cc/150?u=99" class="w-8 h-8 rounded-full" alt="You">
+                        <div class="w-full bg-gray-100 rounded-full px-3 py-2 text-[15px] text-gray-500 flex items-center justify-between">
+                            <span>Write a comment...</span>
+                            <div class="flex gap-2"><i class="far fa-smile"></i><i class="fas fa-camera"></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Right Column -->
+        <div class="hidden md:block col-span-1 fixed right-4 w-[280px] h-[calc(100vh-60px)] overflow-y-auto pb-4">
+            <h3 class="text-gray-500 font-semibold px-2 mb-2 text-lg">Sponsored</h3>
+            <div class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+                <img src="https://picsum.photos/100/100?random=1" class="w-24 h-24 rounded-lg object-cover" alt="Ad">
+                <div>
+                    <h4 class="font-semibold text-[15px] text-gray-900">Tunisie Telecom Promo</h4>
+                    <p class="text-xs text-gray-500">tunisietelecom.tn</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer">
+                <img src="https://picsum.photos/100/100?random=2" class="w-24 h-24 rounded-lg object-cover" alt="Ad">
+                <div>
+                    <h4 class="font-semibold text-[15px] text-gray-900">Jumia Solde</h4>
+                    <p class="text-xs text-gray-500">jumia.com.tn</p>
+                </div>
+            </div>
+            <hr class="my-4 border-gray-300 mx-2">
+            <div class="flex justify-between items-center px-2 mb-2 text-gray-500">
+                <h3 class="font-semibold text-lg">Contacts</h3>
+                <div class="flex gap-3">
+                    <div class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center cursor-pointer"><i class="fas fa-video"></i></div>
+                    <div class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center cursor-pointer"><i class="fas fa-search"></i></div>
+                    <div class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center cursor-pointer"><i class="fas fa-ellipsis-h"></i></div>
+                </div>
+            </div>
+            <div class="flex flex-col gap-1">
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer relative">
+                    <img src="https://i.pravatar.cc/150?u=100" class="w-9 h-9 rounded-full" alt="Contact">
+                    <div class="absolute bottom-2 left-8 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                    <span class="font-medium text-[15px]">Yassine Trabelsi</span>
+                </div>
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer relative">
+                    <img src="https://i.pravatar.cc/150?u=101" class="w-9 h-9 rounded-full" alt="Contact">
+                    <div class="absolute bottom-2 left-8 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                    <span class="font-medium text-[15px]">Salma Khemiri</span>
+                </div>
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer relative">
+                    <img src="https://i.pravatar.cc/150?u=102" class="w-9 h-9 rounded-full" alt="Contact">
+                    <div class="absolute bottom-2 left-8 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                    <span class="font-medium text-[15px]">Oussema Gharbi</span>
+                </div>
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer relative">
+                    <img src="https://i.pravatar.cc/150?u=103" class="w-9 h-9 rounded-full" alt="Contact">
+                    <div class="absolute bottom-2 left-8 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                    <span class="font-medium text-[15px]">Nidhal Zribi</span>
+                </div>
+                <div class="flex items-center gap-3 p-2 hover:bg-gray-200 rounded-lg cursor-pointer relative">
+                    <img src="https://i.pravatar.cc/150?u=104" class="w-9 h-9 rounded-full" alt="Contact">
+                    <div class="absolute bottom-2 left-8 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
+                    <span class="font-medium text-[15px]">Asma Ben Ali</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

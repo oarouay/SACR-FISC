@@ -1,0 +1,26 @@
+import enum
+
+
+class RegistryStatus(enum.StrEnum):
+    NOT_CHECKED = "NOT_CHECKED"
+    PENDING_MANUAL_CHECK = "PENDING_MANUAL_CHECK"
+    MATCHED = "MATCHED"
+    NO_MATCH_CONFIRMED = "NO_MATCH_CONFIRMED"
+    INCONCLUSIVE = "INCONCLUSIVE"
+
+
+class TargetStatus(enum.StrEnum):
+    PENDING = "PENDING"
+    CLAIMED = "CLAIMED"
+    CRAWLING = "CRAWLING"
+    EXTRACTING = "EXTRACTING"
+    COMPLETED = "COMPLETED"
+    RETRY = "RETRY"
+    BLOCKED = "BLOCKED"
+    FAILED = "FAILED"
+    MANUAL_REVIEW = "MANUAL_REVIEW"
+
+
+class CrawlMode(enum.StrEnum):
+    QUICK = "QUICK"
+    DEEP = "DEEP"

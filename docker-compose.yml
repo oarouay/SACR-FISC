@@ -1,0 +1,85 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dci_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-dci_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - dci_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d dci_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: dci_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/dci_db
+      - SYNC_DATABASE_URL=postgresql+psycopg2://postgres:postgres@postgres:5432/dci_db
+      - EVIDENCE_STORAGE_PATH=/app/data/evidence
+      - FIXTURES_PATH=/app/data/fixtures
+      - FACEBOOK_STORAGE_STATE=/app/secrets/facebook-storage-state.json
+      - PLAYWRIGHT_HEADLESS=true
+      - API_PORT=8000
+      - API_HOST=0.0.0.0
+      - LOG_LEVEL=INFO
+      - PYTHONPATH=/app/backend:/app
+    volumes:
+      - ./backend:/app/backend
+      - ./backend/app:/app/app
+      - ./backend/tests:/app/tests
+      - ./data:/app/data
+      - ./secrets:/app/secrets:ro
+      - ./alembic.ini:/app/alembic.ini
+      - ./MOCK:/app/MOCK:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: dci_worker
+    restart: unless-stopped
+    command: ["python", "-m", "app.worker"]
+    environment:
+      - ENVIRONMENT=development
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/dci_db
+      - SYNC_DATABASE_URL=postgresql+psycopg2://postgres:postgres@postgres:5432/dci_db
+      - EVIDENCE_STORAGE_PATH=/app/data/evidence
+      - FIXTURES_PATH=/app/data/fixtures
+      - FACEBOOK_STORAGE_STATE=/app/secrets/facebook-storage-state.json
+      - PLAYWRIGHT_HEADLESS=true
+      - CRAWLER_CONCURRENCY=2
+      - LOG_LEVEL=INFO
+      - PYTHONPATH=/app/backend:/app
+    volumes:
+      - ./backend:/app/backend
+      - ./backend/app:/app/app
+      - ./backend/tests:/app/tests
+      - ./data:/app/data
+      - ./secrets:/app/secrets:ro
+      - ./alembic.ini:/app/alembic.ini
+      - ./MOCK:/app/MOCK:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      backend:
+        condition: service_started
+
+volumes:
+  dci_postgres_data:

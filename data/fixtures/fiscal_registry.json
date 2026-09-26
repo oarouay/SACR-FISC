@@ -1,0 +1,56 @@
+[
+  {
+    "tax_id": "MAT-TEST-001",
+    "business_name": "Tunis Fashion SARL",
+    "phone": "+21698123456",
+    "email": "contact@tunisfashion.tn",
+    "address": "Tunis, Avenue Habib Bourguiba",
+    "activity": "Retail clothing",
+    "status": "ACTIVE"
+  },
+  {
+    "tax_id": "MAT-TEST-002",
+    "business_name": "Sousse Tech Electronics",
+    "phone": "+21622334455",
+    "email": "sales@soussetech.tn",
+    "address": "Sousse, Kantaoui",
+    "activity": "Consumer Electronics",
+    "status": "ACTIVE"
+  },
+  {
+    "tax_id": "MAT-TEST-003",
+    "business_name": "Sfax Commerce Distribution",
+    "phone": "+21674123456",
+    "email": "info@sfaxdistrib.com",
+    "address": "Sfax, Route de Téniour",
+    "activity": "General Merchandise",
+    "status": "SUSPENDED"
+  },
+  {
+    "tax_id": "MAT-TEST-004",
+    "business_name": "Bizerte Artisanal Deco",
+    "phone": "+21650998877",
+    "email": "art@bizerte-deco.tn",
+    "address": "Bizerte, Vieux Port",
+    "activity": "Handicrafts and Decor",
+    "status": "ACTIVE"
+  },
+  {
+    "tax_id": "MAT-TN-100888",
+    "business_name": "Electro Tounes Officiel",
+    "phone": "71 123 456",
+    "email": "contact@electrotounes.com.tn",
+    "address": "Tunis, Centre Urbain Nord",
+    "activity": "Appareils Électroniques et Multimédia",
+    "status": "ACTIVE"
+  },
+  {
+    "tax_id": "MAT-TN-100111",
+    "business_name": "Librairie Le Savoir",
+    "phone": "73 444 555",
+    "email": "info@lesavoir.tn",
+    "address": "Monastir, Avenue Habib Bourguiba",
+    "activity": "Librairie et Fournitures Scolaires",
+    "status": "ACTIVE"
+  }
+]

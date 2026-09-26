@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système de surveillance du commerce numérique</title>
+    <meta name="description" content="Plateforme administrative interne de surveillance de l’activité commerciale publique sur les réseaux sociaux.">
+    <link rel="stylesheet" href="/static/css/style.css?v=20260926_5">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ==================== GOVERNMENT HEADER ==================== -->
+    <header class="gov-header">
+        <div class="gov-header__brand">
+            <div class="gov-header__emblem">
+                <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Simplified institutional shield / emblem -->
+                    <path d="M16 2L4 8v8c0 7.18 5.12 13.88 12 16 6.88-2.12 12-8.82 12-16V8L16 2z" fill="#2B579A" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <path d="M16 7L9 10.5v5c0 4.49 3.2 8.68 7 10 3.8-1.32 7-5.51 7-10v-5L16 7z" fill="#14213D"/>
+                    <circle cx="16" cy="15" r="3.5" fill="none" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <path d="M16 11.5v-1M16 19.5v1M12.5 15h-1M20.5 15h1" stroke="#FFFFFF" stroke-width="1" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="gov-header__titles">
+                <span class="gov-header__name">Système de surveillance du commerce numérique</span>
+                <span class="gov-header__subtitle">Direction de la Surveillance Commerciale Numérique</span>
+            </div>
+        </div>
+        <div class="gov-header__actions">
+            <div class="gov-header__lang" role="group" aria-label="Sélection de langue">
+                <button class="gov-header__lang-btn active" id="lang-btn-fr" type="button" aria-current="true">FR</button>
+                <button class="gov-header__lang-btn" id="lang-btn-ar" type="button" title="العربية (RTL)">AR</button>
+            </div>
+            <div class="gov-header__user" title="Session administrative active">
+                <div class="gov-header__user-icon" aria-hidden="true">OM</div>
+                <div>
+                    <div class="gov-header__user-name">O. Mansouri</div>
+                    <div class="gov-header__user-role">Analyste principal</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== MAIN NAVIGATION ==================== -->
+    <nav class="gov-nav" role="navigation" aria-label="Navigation principale">
+        <button class="gov-nav__item active" data-view="view-dashboard" type="button">Tableau de bord</button>
+        <button class="gov-nav__item" data-view="view-targets" type="button">Cibles</button>
+        <button class="gov-nav__item" data-view="view-review" type="button">Dossiers à examiner</button>
+        <button class="gov-nav__item" data-view="view-pages" type="button">Pages analysées</button>
+        <button class="gov-nav__item" data-view="view-fiscal" type="button">Vérification externe</button>
+        <button class="gov-nav__item" data-view="view-reports" type="button">Rapports</button>
+        <button class="gov-nav__item" data-view="view-metrics" type="button">Supervision du système</button>
+        <button class="gov-nav__item" data-view="view-audit" type="button">Journal d’audit</button>
+    </nav>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="gov-container">
+
+        <!-- ==================== VIEW 0: DASHBOARD ==================== -->
+        <section id="view-dashboard" class="view-section">
+            <div class="gov-page-header gov-dashboard-header">
+                <div>
+                    <h1 class="gov-page-header__title">Tableau de bord</h1>
+                    <p class="gov-page-header__desc">Vue opérationnelle de l’analyse automatisée des pages et de l’activité d’examen.</p>
+                    <ul class="gov-breadcrumb">
+                        <li><a href="#">Accueil</a></li>
+                        <li><span class="current">Tableau de bord</span></li>
+                    </ul>
+                </div>
+                <div class="gov-dashboard-header__actions">
+                    <span id="dashboard-refreshed-at" class="gov-text-secondary">Dernière actualisation –</span>
+                    <button id="dashboard-simulate-btn" class="gov-btn gov-btn--primary gov-btn--sm" type="button" title="Lancer une simulation complète du circuit d'ingestion et d'analyse">
+                        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" style="margin-right: 0.3rem;"><path d="M4 2.5v11l9-5.5-9-5.5z"/></svg>
+                        Simuler le cycle d’analyse
+                    </button>
+                    <button id="dashboard-refresh-btn" class="gov-btn gov-btn--secondary gov-btn--sm" type="button">Actualiser</button>
+                </div>
+            </div>
+
+            <div id="dashboard-content" aria-live="polite">
+                <!-- Institutional Context Banner & Cartouche -->
+                <div class="gov-inst-banner">
+                    <div class="gov-inst-banner__left">
+                        <div class="gov-inst-banner__emblem">
+                            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <circle cx="18" cy="18" r="17" stroke="#2B579A" stroke-width="1.5" fill="#FFFFFF"/>
+                                <path d="M18 5L9 10.5v8c0 7.5 3.8 12.5 9 14.5 5.2-2 9-7 9-14.5v-8L18 5z" fill="#14213D"/>
+                                <path d="M18 8.5L11.5 12.5v6c0 4.5 2.5 8.5 6.5 10 4-1.5 6.5-5.5 6.5-10v-6L18 8.5z" fill="#2B579A"/>
+                                <circle cx="18" cy="16.5" r="3.5" fill="#C1272D"/>
+                                <path d="M17.5 14.8l1.3.9 1.7-1.7-.8 2.6 1.8 1.3-2.2.4-.4 2.2-.5-2.2-2.1-.4 1.7-1.3z" fill="#FFFFFF"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="gov-inst-banner__org">République Tunisienne — Ministère du Commerce et du Développement des Exportations</div>
+                            <div class="gov-inst-banner__sub">Direction de la Surveillance Commerciale Numérique • Plateforme centrale d’instruction et de traçabilité</div>
+                        </div>
+                    </div>
+                    <div class="gov-inst-banner__right">
+                        <span class="gov-inst-badge">Diffusion restreinte</span>
+                        <span class="gov-inst-status"><span class="dashboard-status-dot dashboard-status-dot--completed"></span> Surveillance active</span>
+                    </div>
+                </div>
+
+                <!-- Top Summary Cards -->
+                <div class="dashboard-summary-grid" id="dashboard-summary"></div>
+
+                <!-- Pipeline Architecture & Flow Illustration -->
+                <div class="gov-panel gov-pipeline-card">
+                    <div class="gov-section-header">
+                        <div>
+                            <h2 class="gov-section-title">Schéma d’instruction et chaîne de traitement automatisée</h2>
+                            <p class="gov-panel__subtitle">Circuit certifié : de la détection de la page publique jusqu’au dossier d’examen de l’analyste.</p>
+                        </div>
+                        <span class="gov-badge gov-badge--mode">Processus certifié</span>
+                    </div>
+                    <div class="gov-pipeline-diagram" aria-label="Diagramme du circuit de traitement">
+                        <div class="gov-pipeline-flow">
+                            <div class="gov-pipeline-node">
+                                <span class="gov-pipeline-node__step">Étape 01</span>
+                                <h3 class="gov-pipeline-node__title">Cible publique</h3>
+                                <p class="gov-pipeline-node__desc">Ingestion unitaire ou import CSV des URL Facebook publiques dans la file priorisée.</p>
+                                <span class="gov-pipeline-node__tag">Normalisation URL</span>
+                            </div>
+                            <div class="gov-pipeline-node">
+                                <span class="gov-pipeline-node__step">Étape 02</span>
+                                <h3 class="gov-pipeline-node__title">Collecte Playwright</h3>
+                                <p class="gov-pipeline-node__desc">Navigateur headless Chromium en session isolée, extraction DOM, capture des publications et horodatage certifié.</p>
+                                <span class="gov-pipeline-node__tag">Preuves brutes</span>
+                            </div>
+                            <div class="gov-pipeline-node gov-pipeline-node--highlight">
+                                <span class="gov-pipeline-node__step">Étape 03</span>
+                                <h3 class="gov-pipeline-node__title">Faits matériels</h3>
+                                <p class="gov-pipeline-node__desc">Extraction déterministe certifiée : téléphones (+216), prix (TND), livraisons, commandes et adresses.</p>
+                                <span class="gov-pipeline-node__tag">Signaux matériels</span>
+                            </div>
+                            <div class="gov-pipeline-node">
+                                <span class="gov-pipeline-node__step">Étape 04</span>
+                                <h3 class="gov-pipeline-node__title">Analyse sémantique IA</h3>
+                                <p class="gov-pipeline-node__desc">Moteur Gemini 2.5 Flash multilingue (arabe tunisien, français, translittéré) évaluant la nature commerciale.</p>
+                                <span class="gov-pipeline-node__tag">Aide à la décision</span>
+                            </div>
+                            <div class="gov-pipeline-node">
+                                <span class="gov-pipeline-node__step">Étape 05</span>
+                                <h3 class="gov-pipeline-node__title">Dossier d’instruction</h3>
+                                <p class="gov-pipeline-node__desc">Calcul du score de risque composite (0–100), transfert en file d’examen et inscription au journal d’audit.</p>
+                                <span class="gov-pipeline-node__tag">Revue analyste</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visual Analytics & Operational Graphs -->
+                <div class="dashboard-grid--charts">
+                    <!-- Chart 1: Risk Score Distribution -->
+                    <section class="gov-panel" aria-labelledby="chart-risk-title">
+                        <div class="gov-section-header">
+                            <div>
+                                <h2 id="chart-risk-title" class="gov-section-title">Distribution du risque commercial</h2>
+                                <p class="gov-panel__subtitle">Répartition des pages analysées par tranche d’indice de risque.</p>
+                            </div>
+                            <span class="gov-badge gov-badge--pending" id="chart-risk-total">0 cibles</span>
+                        </div>
+                        <div id="chart-risk-container" class="gov-chart-box">
+                            <div class="dashboard-loading">Chargement du graphique…</div>
+                        </div>
+                    </section>
+
+                    <!-- Chart 2: Transaction Indicators Frequency -->
+                    <section class="gov-panel" aria-labelledby="chart-signals-title">
+                        <div class="gov-section-header">
+                            <div>
+                                <h2 id="chart-signals-title" class="gov-section-title">Indices transactionnels observables</h2>
+                                <p class="gov-panel__subtitle">Fréquence de détection des preuves matérielles physiques.</p>
+                            </div>
+                            <span class="gov-badge gov-badge--processing">Signaux certifiés</span>
+                        </div>
+                        <div id="chart-signals-container" class="gov-chart-box">
+                            <div class="dashboard-loading">Chargement des indices…</div>
+                        </div>
+                    </section>
+
+                    <!-- Chart 3: External Verification Status Breakdown -->
+                    <section class="gov-panel" aria-labelledby="chart-registry-title">
+                        <div class="gov-section-header">
+                            <div>
+                                <h2 id="chart-registry-title" class="gov-section-title">Statut de vérification externe</h2>
+                                <p class="gov-panel__subtitle">Concordance avec les données d’immatriculation.</p>
+                            </div>
+                            <span class="gov-badge gov-badge--review">Registre</span>
+                        </div>
+                        <div id="chart-registry-container" class="gov-chart-box">
+                            <div class="dashboard-loading">Chargement du statut…</div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="dashboard-grid dashboard-grid--top">
+                    <section class="gov-panel gov-panel--flush dashboard-panel--wide" aria-labelledby="dashboard-review-title">
+                        <div class="gov-panel__header">
+                            <div>
+                                <h2 id="dashboard-review-title" class="gov-panel__title">Dossiers à examiner</h2>
+                                <p class="gov-panel__subtitle">Pages prioritaires en attente d’intervention de l’analyste.</p>
+                            </div>
+                            <button class="gov-btn gov-btn--ghost gov-btn--sm" type="button" data-dashboard-view="view-review">Voir tous les dossiers</button>
+                        </div>
+                        <div class="gov-table-wrapper">
+                            <table class="gov-table gov-table--striped">
+                                <thead><tr><th>Dossier / page</th><th>Priorité d’examen</th><th>Activité commerciale</th><th>Indices transactionnels</th><th>Dernière mise à jour</th><th>Actions</th></tr></thead>
+                                <tbody id="dashboard-review-body"><tr><td colspan="6" class="cell-empty">Chargement des dossiers…</td></tr></tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section class="gov-panel dashboard-panel--side" aria-labelledby="dashboard-alerts-title">
+                        <div class="dashboard-section-heading">
+                            <div><h2 id="dashboard-alerts-title" class="gov-panel__title">Alertes opérationnelles</h2><p class="gov-panel__subtitle">Éléments nécessitant une intervention.</p></div>
+                        </div>
+                        <div id="dashboard-alerts"></div>
+                    </section>
+                </div>
+
+                <div class="dashboard-grid">
+                    <section class="gov-panel" aria-labelledby="dashboard-processing-title">
+                        <div class="dashboard-section-heading"><div><h2 id="dashboard-processing-title" class="gov-panel__title">Vue d’ensemble du traitement</h2><p class="gov-panel__subtitle">État de la file et volume de collecte.</p></div></div>
+                        <div id="dashboard-processing" class="dashboard-stat-list"></div>
+                    </section>
+                    <section class="gov-panel" aria-labelledby="dashboard-monitoring-title">
+                        <div class="dashboard-section-heading"><div><h2 id="dashboard-monitoring-title" class="gov-panel__title">État du système</h2><p class="gov-panel__subtitle">Synthèse de l’état des services.</p></div><button class="gov-btn gov-btn--ghost gov-btn--sm" type="button" data-dashboard-view="view-metrics">Ouvrir la supervision</button></div>
+                        <div id="dashboard-monitoring" class="dashboard-stat-list"></div>
+                    </section>
+                </div>
+
+                <div class="dashboard-grid">
+                    <section class="gov-panel gov-panel--flush dashboard-panel--wide" aria-labelledby="dashboard-activity-title">
+                        <div class="gov-panel__header"><div><h2 id="dashboard-activity-title" class="gov-panel__title">Activité récente des cibles</h2><p class="gov-panel__subtitle">Derniers enregistrements actualisés dans la file.</p></div><button class="gov-btn gov-btn--ghost gov-btn--sm" type="button" data-dashboard-view="view-targets">Ouvrir les cibles</button></div>
+                        <div class="gov-table-wrapper"><table class="gov-table gov-table--striped"><thead><tr><th>Cible</th><th>Mode</th><th>Statut</th><th>Score rapide</th><th>Score final</th><th>Dernière mise à jour</th></tr></thead><tbody id="dashboard-activity-body"><tr><td colspan="6" class="cell-empty">Chargement de l’activité…</td></tr></tbody></table></div>
+                    </section>
+                    <section class="gov-panel dashboard-panel--side" aria-labelledby="dashboard-verification-title">
+                        <div class="dashboard-section-heading"><div><h2 id="dashboard-verification-title" class="gov-panel__title">Vérification externe</h2><p class="gov-panel__subtitle">Processus administratif distinct ; non vérifié ne signifie pas non enregistré.</p></div><button class="gov-btn gov-btn--ghost gov-btn--sm" type="button" data-dashboard-view="view-fiscal">Ouvrir la vérification</button></div>
+                        <div id="dashboard-verification" class="dashboard-stat-list"></div>
+                    </section>
+                </div>
+
+                <section class="gov-panel" aria-labelledby="dashboard-audit-title">
+                    <div class="dashboard-section-heading"><div><h2 id="dashboard-audit-title" class="gov-panel__title">Activité récente du journal d’audit</h2><p class="gov-panel__subtitle">Derniers événements système de la session courante.</p></div><button class="gov-btn gov-btn--ghost gov-btn--sm" type="button" data-dashboard-view="view-metrics">Ouvrir le journal</button></div>
+                    <div id="dashboard-audit" class="dashboard-audit-list"></div>
+                </section>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 1: TARGET MANAGEMENT ==================== -->
+        <section id="view-targets" class="view-section" style="display: none;">
+
+            <!-- Page Header -->
+            <div class="gov-page-header">
+                <h1 class="gov-page-header__title">Gestion des cibles</h1>
+                <p class="gov-page-header__desc">Soumettre et gérer les pages publiques destinées à l’analyse automatisée de l’activité commerciale.</p>
+                <ul class="gov-breadcrumb">
+                    <li><a href="#">Accueil</a></li>
+                    <li><span class="current">Cibles</span></li>
+                </ul>
+            </div>
+
+            <!-- Target Creation Forms -->
+            <div class="gov-grid-2 gov-mb-2">
+
+                <!-- Add Individual Target -->
+                <div class="gov-panel">
+                    <h2 class="gov-panel__title gov-mb-2">Ajouter une cible</h2>
+                    <form id="target-form">
+                        <div class="gov-form-group">
+                            <label for="target-url" class="gov-label">URL de la page Facebook</label>
+                            <input type="url" id="target-url" class="gov-input" placeholder="https://www.facebook.com/page-name" required>
+                        </div>
+                        <div class="gov-form-group">
+                            <label for="target-priority" class="gov-label">Priorité de traitement</label>
+                            <select id="target-priority" class="gov-select">
+                                <option value="0">Faible</option>
+                                <option value="5" selected>Normale</option>
+                                <option value="15">Élevée</option>
+                                <option value="25">Urgente</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="target-submit-btn" class="gov-btn gov-btn--primary gov-btn--full">Ajouter la cible</button>
+                    </form>
+                </div>
+
+                <!-- Bulk Import -->
+                <div class="gov-panel">
+                    <h2 class="gov-panel__title gov-mb-1">Import en masse</h2>
+                    <p class="gov-text-secondary gov-mb-2">Importer des URL de pages Facebook depuis un fichier CSV ou coller une URL par ligne.</p>
+                    <form id="csv-form">
+                        <div class="gov-form-group">
+                            <label for="csv-file" class="gov-label">Fichier CSV <span class="gov-label--hint">(doit contenir une colonne « url »)</span></label>
+                            <input type="file" id="csv-file" class="gov-file-input" accept=".csv,text/csv">
+                        </div>
+                        <div class="gov-form-group">
+                            <label for="csv-text" class="gov-label">Ou coller les URL directement</label>
+                            <textarea id="csv-text" class="gov-textarea" rows="3" placeholder="https://facebook.com/page1&#10;https://facebook.com/page2"></textarea>
+                        </div>
+                        <button type="submit" id="csv-submit-btn" class="gov-btn gov-btn--primary gov-btn--full">Importer les cibles</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Target Queue Table -->
+            <div class="gov-panel gov-panel--flush">
+                <div class="gov-panel__header">
+                    <div>
+                        <h2 class="gov-panel__title">File de traitement</h2>
+                        <p class="gov-panel__subtitle" id="targets-count-label">Chargement des cibles…</p>
+                    </div>
+                    <div class="gov-flex gov-flex--center gov-flex--gap-sm">
+                        <button type="button" id="targets-simulate-btn" class="gov-btn gov-btn--primary gov-btn--sm" title="Lancer une simulation de traitement Playwright et analyse IA sur les cibles">
+                            <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" style="margin-right: 0.3rem;"><path d="M4 2.5v11l9-5.5-9-5.5z"/></svg>
+                            Lancer le cycle d’analyse
+                        </button>
+                        <button type="button" id="load-mock-targets-btn" class="gov-btn gov-btn--secondary gov-btn--sm" title="Charger les données de test">Charger les données de test</button>
+                        <button type="button" id="export-targets-btn" class="gov-btn gov-btn--secondary gov-btn--sm" title="Exporter la file actuelle au format CSV">Exporter CSV</button>
+                        <button type="button" id="refresh-targets-btn" class="gov-btn gov-btn--secondary gov-btn--sm" title="Actualiser la liste">Actualiser</button>
+                    </div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="gov-filter-bar">
+                    <input type="text" id="filter-search" class="gov-input gov-input--search" placeholder="Rechercher une cible…" aria-label="Rechercher par URL ou identifiant">
+                    <select id="filter-status" class="gov-select gov-select--filter" aria-label="Filtrer par statut">
+                        <option value="">Tous les statuts</option>
+                        <option value="PENDING">En attente</option>
+                        <option value="CLAIMED">Pris en charge</option>
+                        <option value="CRAWLING">Collecte en cours</option>
+                        <option value="COMPLETED">Terminé</option>
+                        <option value="MANUAL_REVIEW">Examen manuel requis</option>
+                        <option value="BLOCKED">Bloqué</option>
+                        <option value="FAILED">Échec</option>
+                        <option value="RETRY">Nouvelle tentative prévue</option>
+                    </select>
+                    <select id="filter-mode" class="gov-select gov-select--filter" aria-label="Filtrer par mode">
+                        <option value="">Tous les modes</option>
+                        <option value="QUICK">Rapide</option>
+                        <option value="DEEP">Approfondi</option>
+                    </select>
+                    <select id="filter-priority" class="gov-select gov-select--filter" aria-label="Filtrer par priorité">
+                        <option value="">Toutes les priorités</option>
+                        <option value="Low">Faible</option>
+                        <option value="Normal">Normale</option>
+                        <option value="High">Élevée</option>
+                        <option value="Urgent">Urgente</option>
+                    </select>
+                    <select id="filter-sort" class="gov-select gov-select--filter" aria-label="Ordre d'affichage">
+                        <option value="newest">Plus récent d’abord</option>
+                        <option value="oldest">Plus ancien d’abord</option>
+                        <option value="priority_desc">Priorité décroissante</option>
+                        <option value="priority_asc">Priorité croissante</option>
+                        <option value="score_desc">Score décroissant</option>
+                    </select>
+                    <div class="gov-filter-bar__spacer"></div>
+                </div>
+
+                <!-- Table -->
+                <div class="gov-table-wrapper">
+                    <table class="gov-table gov-table--striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Cible</th>
+                                <th scope="col">Mode</th>
+                                <th scope="col">Statut</th>
+                                <th scope="col">Priorité</th>
+                                <th scope="col">Score rapide</th>
+                                <th scope="col">Score final</th>
+                                <th scope="col">Tentatives</th>
+                                <th scope="col">Dernière mise à jour</th>
+                                <th scope="col">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="targets-table-body">
+                            <tr><td colspan="9" class="cell-empty">Chargement des cibles…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Table Footer & Pagination -->
+                <div class="gov-table-footer">
+                    <span id="targets-footer-info">–</span>
+                    <div class="gov-flex gov-flex--center gov-flex--gap">
+                        <div class="gov-page-size-selector">
+                            <label for="targets-page-size">Lignes :</label>
+                            <select id="targets-page-size" aria-label="Nombre de lignes par page">
+                                <option value="10">10</option>
+                                <option value="25" selected>25</option>
+                                <option value="50">50</option>
+                                <option value="all">Tout</option>
+                            </select>
+                        </div>
+                        <div class="gov-pagination" role="navigation" aria-label="Pagination des cibles">
+                            <button id="targets-prev-btn" class="gov-pagination__btn" type="button" disabled title="Page précédente">← Précédent</button>
+                            <span id="targets-pagination-info" class="gov-pagination__info">Page 1 / 1</span>
+                            <button id="targets-next-btn" class="gov-pagination__btn" type="button" disabled title="Page suivante">Suivant →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 2: CASES FOR REVIEW ==================== -->
+        <section id="view-review" class="view-section" style="display: none;">
+            <div class="gov-page-header">
+                <h1 class="gov-page-header__title">Dossiers à examiner</h1>
+                <p class="gov-page-header__desc">Pages présentant des indices commerciaux observables nécessitant un examen.</p>
+                <ul class="gov-breadcrumb">
+                    <li><a href="#">Accueil</a></li>
+                    <li><span class="current">Dossiers à examiner</span></li>
+                </ul>
+            </div>
+            <div class="gov-panel" style="margin-bottom: 1rem;">
+                <div class="gov-flex gov-flex--between gov-flex--center">
+                    <div>
+                        <h2 class="gov-panel__title" style="margin: 0;">File des dossiers</h2>
+                        <p class="gov-panel__subtitle">Pages candidates à priorité élevée (score ≥ 75,0).</p>
+                    </div>
+                    <button id="refresh-review-btn" class="gov-btn gov-btn--secondary gov-btn--sm" type="button">Actualiser</button>
+                </div>
+            </div>
+            <div id="review-queue-list"></div>
+        </section>
+
+        <!-- ==================== VIEW 3: ANALYZED PAGES ==================== -->
+        <section id="view-pages" class="view-section" style="display: none;">
+            <div class="gov-page-header">
+                <h1 class="gov-page-header__title">Pages analysées</h1>
+                <p class="gov-page-header__desc">Toutes les pages collectées et analysées par le système de surveillance.</p>
+                <ul class="gov-breadcrumb">
+                    <li><a href="#">Accueil</a></li>
+                    <li><span class="current">Pages analysées</span></li>
+                </ul>
+            </div>
+            <div class="gov-panel">
+                <div class="gov-flex gov-flex--between gov-flex--center gov-mb-2">
+                    <h2 class="gov-panel__title" style="margin: 0;">Pages collectées</h2>
+                    <button id="refresh-pages-btn" class="gov-btn gov-btn--secondary gov-btn--sm" type="button">Actualiser</button>
+                </div>
+                <div id="pages-list"></div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 4: CASE REVIEW ==================== -->
+        <section id="view-inspect" class="view-section" style="display: none;">
+            
+            <!-- Case Header -->
+            <div class="gov-case-header">
+                <div class="gov-case-header__top">
+                    <div>
+                        <div class="gov-case-number" id="inspect-case-id">Dossier #DCI-2026-000184</div>
+                        <h1 class="gov-case-title" id="inspect-page-name">–</h1>
+                        <a id="inspect-page-url" href="#" target="_blank" rel="noopener noreferrer" class="gov-text-link" style="font-size: 0.8125rem;">–</a>
+                    </div>
+                    <div class="gov-flex gov-flex--center gov-flex--gap-sm">
+                        <span id="inspect-case-status" class="gov-badge gov-badge--review">Examen requis</span>
+                        <button onclick="navigateBackFromCase()" class="gov-btn gov-btn--secondary gov-btn--sm" type="button">← Retour à la liste</button>
+                    </div>
+                </div>
+                <div class="gov-case-meta">
+                    <div><span class="gov-text-secondary">Date d’analyse :</span> <strong id="inspect-analysis-date">–</strong></div>
+                    <div><span class="gov-text-secondary">Mode d’instruction :</span> <strong id="inspect-crawl-mode">Approfondi</strong></div>
+                    <div><span class="gov-text-secondary">Statut de vérification :</span> <strong id="inspect-registry-status-badge">Non vérifié</strong></div>
+                    <div><span class="gov-text-secondary">Analyste référent :</span> <strong>O. Mansouri</strong></div>
+                </div>
+            </div>
+
+            <div class="gov-case-grid">
+
+                <!-- Left Column: Core Case Data -->
+                <div class="gov-flex" style="flex-direction: column; gap: 1.25rem;">
+
+                    <!-- 1. Overview & Scores -->
+                    <div class="gov-panel">
+                        <div class="gov-section-header">
+                            <h2 class="gov-section-title">Synthèse de l’évaluation commerciale</h2>
+                            <span class="gov-badge gov-badge--mode">Indices quantitatifs</span>
+                        </div>
+                        <div class="gov-indicator-grid" id="inspect-scores-grid">
+                            <!-- Populated dynamically -->
+                        </div>
+                        <div id="inspect-scores-reasons" style="border-left: 3px solid var(--gov-border-strong); padding-left: 0.75rem; margin-top: 0.75rem;">
+                            <!-- Score reasons -->
+                        </div>
+                    </div>
+
+                    <!-- 2. Transaction Indicators -->
+                    <div class="gov-panel">
+                        <div class="gov-section-header">
+                            <h2 class="gov-section-title">Indices transactionnels observables</h2>
+                            <span class="gov-text-secondary" style="font-size: 0.75rem;">Preuves déterministes</span>
+                        </div>
+                        <div id="inspect-transaction-indicators" class="gov-indicator-grid">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- 3. Source Evidence -->
+                    <div class="gov-panel">
+                        <div class="gov-section-header">
+                            <h2 class="gov-section-title">Éléments de preuve sources (Publications)</h2>
+                            <span id="inspect-evidence-count" class="gov-text-secondary" style="font-size: 0.75rem;">0 publication collectée</span>
+                        </div>
+                        <div id="inspect-evidence-list">
+                            <!-- Evidence cards populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- 4. AI Semantic Analysis -->
+                    <div class="gov-panel">
+                        <div class="gov-section-header">
+                            <h2 class="gov-section-title">Analyse sémantique automatisée</h2>
+                            <span class="gov-badge gov-badge--processing">Fournisseur : Gemini</span>
+                        </div>
+                        <p class="gov-text-secondary" style="font-size: 0.8125rem; margin-bottom: 0.75rem;">
+                            L’analyse automatisée constitue un élément d’aide à la décision. Les interprétations sémantiques sont clairement séparées des faits matériels observés.
+                        </p>
+                        <div id="inspect-ai-analysis-container">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Verification, Notes & Audit -->
+                <div class="gov-flex" style="flex-direction: column; gap: 1.25rem;">
+
+                    <!-- 5. Extracted Business Info -->
+                    <div class="gov-panel">
+                        <div class="gov-section-header">
+                            <h2 class="gov-section-title">Coordonnées de l’entité</h2>
+                        </div>
+                        <div class="dashboard-stat-list" style="border-top: none;">
+                            <div class="dashboard-stat-row"><span>Téléphone public</span><strong id="inspect-phone">–</strong></div>
+                            <div class="dashboard-stat-row"><span>Courriel</span><strong id="inspect-email">–</strong></div>
+                            <div class="dashboard-stat-row"><span>Site web</span><strong id="inspect-website">–</strong></div>
+                            <div class="dashboard-stat-row"><span>Statut vérification</span><strong id="inspect-registry-status">Non vérifié</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- 6. External Verification -->
+                    <div class="gov-panel">
+                        <div class="gov-section-header">
+                            <h2 class="gov-section-title">Vérification externe</h2>
+                        </div>
+                        <p class="gov-text-secondary" style="font-size: 0.75rem; margin-bottom: 0.75rem;">
+                            L’accès automatisé au registre national des entreprises (RNE) n’étant pas disponible, l’absence de concordance ne signifie pas une absence d’immatriculation.
+                        </p>
+                        <div class="gov-form-group">
+                            <label for="inspect-verification-select" class="gov-label">Statut administratif attribué</label>
+                            <select id="inspect-verification-select" class="gov-select">
+                                <option value="NOT_CHECKED">Non vérifié</option>
+                                <option value="PENDING_MANUAL_CHECK">Vérification en attente</option>
+                                <option value="MANUALLY_VERIFIED">Manuellement vérifié</option>
+                                <option value="MATCHED">Correspondance confirmée</option>
+                                <option value="NO_MATCH_CONFIRMED">Aucune correspondance confirmée</option>
+                                <option value="INCONCLUSIVE">Résultat non concluant</option>
+                            </select>
+                        </div>
+                        <div class="gov-form-group">
+                            <label for="inspect-tax-id-input" class="gov-label">Identifiant fiscal (MF / RNE si identifié)</label>
+                            <input type="text" id="inspect-tax-id-input" class="gov-input" placeholder="Ex: 1234567/A/M/000">
+                        </div>
+                        <button type="button" id="inspect-save-verification-btn" class="gov-btn gov-btn--secondary gov-btn--full gov-btn--sm">Mettre à jour la vérification</button>
+                    </div>
+
+                    <!-- 7. Analyst Notes -->
+                    <div class="gov-panel">
+                        <div class="gov-section-header">
+                            <h2 class="gov-section-title">Observations de l’analyste</h2>
+                        </div>
+                        <form id="inspect-notes-form">
+                            <div class="gov-form-group">
+                                <label for="inspect-note-input" class="gov-label">Nouvelle observation administrative</label>
+                                <textarea id="inspect-note-input" class="gov-textarea" rows="2" placeholder="Ajouter une observation d’instruction…"></textarea>
+                            </div>
+                            <button type="submit" class="gov-btn gov-btn--primary gov-btn--sm gov-btn--full">Enregistrer l’observation</button>
+                        </form>
+                        <div id="inspect-notes-list" class="gov-notes-list">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- 8. Case Audit History -->
+                    <div class="gov-panel">
+                        <div class="gov-section-header">
+                            <h2 class="gov-section-title">Historique d’instruction</h2>
+                        </div>
+                        <div class="gov-timeline" id="inspect-case-timeline">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ==================== VIEW 5: SYSTEM MONITORING ==================== -->
+        <section id="view-metrics" class="view-section" style="display: none;">
+            <div class="gov-page-header">
+                <h1 class="gov-page-header__title">Supervision du système</h1>
+                <p class="gov-page-header__desc">Indicateurs opérationnels et état du circuit de traitement.</p>
+                <ul class="gov-breadcrumb">
+                    <li><a href="#">Accueil</a></li>
+                    <li><span class="current">Supervision du système</span></li>
+                </ul>
+            </div>
+
+            <div class="gov-panel gov-mb-2">
+                <h2 class="gov-panel__title">Indicateurs du circuit de traitement</h2>
+                <div id="metrics-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;"></div>
+            </div>
+
+            <div class="gov-panel">
+                <h2 class="gov-panel__title">Indicateurs d’analyse automatisée</h2>
+                <div id="ai-metrics-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;"></div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 6: EXTERNAL VERIFICATION ==================== -->
+        <section id="view-fiscal" class="view-section" style="display: none;">
+            <div class="gov-page-header">
+                <h1 class="gov-page-header__title">Vérification externe</h1>
+                <p class="gov-page-header__desc">Comparer les données collectées avec les enregistrements d’un registre externe.</p>
+                <ul class="gov-breadcrumb">
+                    <li><a href="#">Accueil</a></li>
+                    <li><span class="current">Vérification externe</span></li>
+                </ul>
+            </div>
+            <div class="gov-panel">
+                <h2 class="gov-panel__title gov-mb-1">Recherche dans le registre</h2>
+                <p class="gov-text-secondary gov-mb-2">
+                    Rechercher dans les données de référence par numéro de téléphone, raison sociale ou adresse électronique. L’accès automatisé au registre n’est pas disponible actuellement.
+                </p>
+                <div class="gov-flex gov-flex--gap" style="margin-bottom: 1rem;">
+                    <input type="text" id="fiscal-query" class="gov-input" placeholder="Rechercher par téléphone (+216…), nom ou courriel…" style="flex: 1;">
+                    <button type="button" id="fiscal-search-btn" class="gov-btn gov-btn--primary">Rechercher</button>
+                </div>
+                <div id="fiscal-results"></div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 7: REPORTS ==================== -->
+        <section id="view-reports" class="view-section" style="display: none;">
+            <div class="gov-page-header">
+                <h1 class="gov-page-header__title">Rapports et synthèses opérationnelles</h1>
+                <p class="gov-page-header__desc">Documents officiels et exports périodiques pour les services d’inspection et de régulation.</p>
+                <ul class="gov-breadcrumb">
+                    <li><a href="#">Accueil</a></li>
+                    <li><span class="current">Rapports</span></li>
+                </ul>
+            </div>
+            <div class="gov-grid-2 gov-mb-2">
+                <div class="gov-panel">
+                    <h2 class="gov-panel__title gov-mb-1">Synthèse journalière d’activité</h2>
+                    <p class="gov-text-secondary gov-mb-2">Bilan quantitatif des cibles collectées, scores d’indices commerciaux et dossiers transférés à l’examen.</p>
+                    <button type="button" class="gov-btn gov-btn--secondary gov-btn--sm" onclick="alert('Génération du rapport PDF en cours...')">Exporter rapport journalier (PDF)</button>
+                </div>
+                <div class="gov-panel">
+                    <h2 class="gov-panel__title gov-mb-1">Export complet de la file (CSV)</h2>
+                    <p class="gov-text-secondary gov-mb-2">Tableau exhaustif des cibles avec leurs métadonnées, scores et statuts de traitement pour exploitation externe.</p>
+                    <button type="button" class="gov-btn gov-btn--secondary gov-btn--sm" onclick="exportTargetsCsv()">Télécharger le fichier CSV</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== VIEW 8: AUDIT LOG ==================== -->
+        <section id="view-audit" class="view-section" style="display: none;">
+            <div class="gov-page-header">
+                <h1 class="gov-page-header__title">Journal d’audit et traçabilité</h1>
+                <p class="gov-page-header__desc">Historique exhaustif et horodaté des actions système, collectes et décisions d’examen.</p>
+                <ul class="gov-breadcrumb">
+                    <li><a href="#">Accueil</a></li>
+                    <li><span class="current">Journal d’audit</span></li>
+                </ul>
+            </div>
+            <div class="gov-panel gov-panel--flush">
+                <div class="gov-panel__header">
+                    <div>
+                        <h2 class="gov-panel__title">Événements enregistrés</h2>
+                        <p class="gov-panel__subtitle">Traçabilité des traitements et interventions administratives.</p>
+                    </div>
+                    <button type="button" class="gov-btn gov-btn--secondary gov-btn--sm" onclick="loadAuditLog()">Actualiser</button>
+                </div>
+                <div class="gov-table-wrapper">
+                    <table class="gov-table gov-table--striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date / Heure</th>
+                                <th scope="col">Acteur</th>
+                                <th scope="col">Action réalisée</th>
+                                <th scope="col">Cible / Référence</th>
+                                <th scope="col">Résultat</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-table-body">
+                            <tr><td colspan="5" class="cell-empty">Chargement des événements d’audit…</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== EVIDENCE DETAIL MODAL ==================== -->
+        <div id="evidence-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-evidence-title" style="display: none;">
+            <div class="modal-content" style="max-width: 680px;">
+                <div class="modal-header">
+                    <div>
+                        <div class="gov-case-number" id="modal-evidence-subtitle">Élément de preuve source #FB-001</div>
+                        <h2 class="gov-panel__title" id="modal-evidence-title">Publication Facebook collectée</h2>
+                    </div>
+                    <button type="button" class="modal-close" onclick="closeEvidenceModal()" aria-label="Fermer la boîte de dialogue">✕</button>
+                </div>
+                <div id="modal-evidence-body" style="padding-top: 0.5rem;">
+                    <!-- Populated dynamically -->
+                </div>
+                <div class="gov-flex gov-flex--between gov-flex--center" style="margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1px solid var(--gov-border);">
+                    <span id="modal-evidence-timestamp" class="gov-text-muted" style="font-size: 0.75rem;">–</span>
+                    <button type="button" class="gov-btn gov-btn--secondary gov-btn--sm" onclick="closeEvidenceModal()">Fermer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== PIPELINE EXECUTION SIMULATION MODAL ==================== -->
+        <div id="pipeline-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="pipeline-modal-title" style="display: none;">
+            <div class="modal-content gov-simulation-modal">
+                <div class="modal-header">
+                    <div class="gov-flex gov-flex--center gov-flex--gap-sm">
+                        <div class="gov-modal-icon" aria-hidden="true">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="gov-case-number">SUPERVISION DU CIRCUIT WORKER #WRK-2026-0926</div>
+                            <h2 class="gov-panel__title" id="pipeline-modal-title">Cycle d’analyse & de collecte automatisée</h2>
+                        </div>
+                    </div>
+                    <button type="button" class="modal-close" onclick="closePipelineModal()" aria-label="Fermer la boîte de dialogue">✕</button>
+                </div>
+
+                <!-- Stepper Progress Bar -->
+                <div class="gov-sim-progress-wrapper">
+                    <div class="gov-sim-progress-header">
+                        <span id="sim-phase-label" class="gov-sim-phase-title">Phase 1/5 : Initialisation de l’environnement Playwright…</span>
+                        <span id="sim-pct-label" class="gov-sim-pct">0%</span>
+                    </div>
+                    <div class="gov-sim-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="sim-progress-bar">
+                        <div class="gov-sim-progress-fill" id="sim-progress-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- Step Sequence Indicator -->
+                <div class="gov-sim-steps" id="sim-steps-container">
+                    <div class="gov-sim-step active" id="sim-step-1">
+                        <div class="gov-sim-step__num">1</div>
+                        <div class="gov-sim-step__label">Initialisation Playwright</div>
+                    </div>
+                    <div class="gov-sim-step" id="sim-step-2">
+                        <div class="gov-sim-step__num">2</div>
+                        <div class="gov-sim-step__label">Collecte & Capture DOM</div>
+                    </div>
+                    <div class="gov-sim-step" id="sim-step-3">
+                        <div class="gov-sim-step__num">3</div>
+                        <div class="gov-sim-step__label">Signaux déterministes</div>
+                    </div>
+                    <div class="gov-sim-step" id="sim-step-4">
+                        <div class="gov-sim-step__num">4</div>
+                        <div class="gov-sim-step__label">Analyse IA Gemini</div>
+                    </div>
+                    <div class="gov-sim-step" id="sim-step-5">
+                        <div class="gov-sim-step__num">5</div>
+                        <div class="gov-sim-step__label">Score & Traçabilité</div>
+                    </div>
+                </div>
+
+                <!-- Current Activity Banner -->
+                <div class="gov-sim-activity" id="sim-activity-box">
+                    <div class="gov-sim-spinner" aria-hidden="true"></div>
+                    <div id="sim-current-activity" class="gov-sim-activity-text">
+                        Préparation du pool de workers headless Chromium…
+                    </div>
+                </div>
+
+                <!-- Metrics Bar -->
+                <div class="gov-sim-metrics-grid">
+                    <div class="gov-sim-metric">
+                        <span class="gov-sim-metric__lbl">Cibles en traitement</span>
+                        <strong class="gov-sim-metric__val" id="sim-metric-targets">10</strong>
+                    </div>
+                    <div class="gov-sim-metric">
+                        <span class="gov-sim-metric__lbl">Publications analysées</span>
+                        <strong class="gov-sim-metric__val" id="sim-metric-posts">0</strong>
+                    </div>
+                    <div class="gov-sim-metric">
+                        <span class="gov-sim-metric__lbl">Indices matériels détectés</span>
+                        <strong class="gov-sim-metric__val" id="sim-metric-signals">0</strong>
+                    </div>
+                    <div class="gov-sim-metric">
+                        <span class="gov-sim-metric__lbl">Temps d’exécution</span>
+                        <strong class="gov-sim-metric__val" id="sim-metric-timer">00:00.0s</strong>
+                    </div>
+                </div>
+
+                <!-- Real-Time Administrative Console Log -->
+                <div class="gov-sim-console">
+                    <div class="gov-sim-console__header">
+                        <span>JOURNAL DU PROCESSUS WORKER (STDOUT / STDERR)</span>
+                        <span class="gov-sim-console__live"><span class="gov-sim-pulse-dot"></span> EN COURS</span>
+                    </div>
+                    <div class="gov-sim-console__body" id="sim-console-body">
+                        <!-- Streaming log entries -->
+                    </div>
+                </div>
+
+                <!-- Completion banner (hidden initially) -->
+                <div id="sim-completion-banner" class="gov-sim-complete" style="display: none;">
+                    <div class="gov-sim-complete__icon">✓</div>
+                    <div>
+                        <h3 class="gov-sim-complete__title">Cycle de traitement exécuté avec succès</h3>
+                        <p class="gov-sim-complete__desc">Toutes les cibles du lot ont été collectées, analysées par le moteur déterministe et Gemini 2.5 Flash, et indexées dans le journal d'audit.</p>
+                    </div>
+                </div>
+
+                <!-- Modal Footer Actions -->
+                <div class="gov-flex gov-flex--between gov-flex--center gov-mt-2" style="border-top: 1px solid var(--gov-border); padding-top: 0.75rem;">
+                    <button type="button" id="sim-cancel-btn" class="gov-btn gov-btn--secondary gov-btn--sm" onclick="cancelPipelineSimulation()">Suspendre le cycle</button>
+                    <div class="gov-flex gov-flex--gap-sm">
+                        <button type="button" id="sim-view-cases-btn" class="gov-btn gov-btn--primary gov-btn--sm" style="display: none;" onclick="simGoToReviewCases()">Consulter les dossiers d’examen</button>
+                        <button type="button" id="sim-close-btn" class="gov-btn gov-btn--secondary gov-btn--sm" onclick="closePipelineModal()">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="/static/js/app.js?v=20260926_5"></script>
+</body>
+</html>
