@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Système de surveillance du commerce numérique</title>
     <meta name="description" content="Plateforme administrative interne de surveillance de l’activité commerciale publique sur les réseaux sociaux.">
-    <link rel="stylesheet" href="/static/css/style.css?v=20260926_5">
+    <link rel="stylesheet" href="/static/css/style.css?v=20260926_7">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -158,7 +158,10 @@
                     <section class="gov-panel" aria-labelledby="chart-risk-title">
                         <div class="gov-section-header">
                             <div>
-                                <h2 id="chart-risk-title" class="gov-section-title">Distribution du risque commercial</h2>
+                                <h2 id="chart-risk-title" class="gov-section-title">
+                                    Distribution du risque commercial
+                                    <button type="button" class="gov-tooltip-trigger" data-tooltip="Répartition statistique des cibles selon 4 classes de risque : Faible (&lt;30), Modéré (30-59), Élevé (60-79) et Critique (80-100)." aria-label="Distribution du risque commercial : Répartition statistique des cibles selon 4 classes de risque" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Répartition statistique des cibles selon 4 classes de risque : Faible (&lt;30), Modéré (30-59), Élevé (60-79) et Critique (80-100).</span></button>
+                                </h2>
                                 <p class="gov-panel__subtitle">Répartition des pages analysées par tranche d’indice de risque.</p>
                             </div>
                             <span class="gov-badge gov-badge--pending" id="chart-risk-total">0 cibles</span>
@@ -172,7 +175,10 @@
                     <section class="gov-panel" aria-labelledby="chart-signals-title">
                         <div class="gov-section-header">
                             <div>
-                                <h2 id="chart-signals-title" class="gov-section-title">Indices transactionnels observables</h2>
+                                <h2 id="chart-signals-title" class="gov-section-title">
+                                    Indices transactionnels observables
+                                    <button type="button" class="gov-tooltip-trigger" data-tooltip="Fréquence d’apparition des preuves matérielles de commerce : téléphone tunisien (+216), mention de livraison, prix en Dinars, commande directe." aria-label="Indices transactionnels observables : Fréquence d’apparition des preuves matérielles de commerce" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Fréquence d’apparition des preuves matérielles de commerce : téléphone tunisien (+216), mention de livraison, prix en Dinars, commande directe.</span></button>
+                                </h2>
                                 <p class="gov-panel__subtitle">Fréquence de détection des preuves matérielles physiques.</p>
                             </div>
                             <span class="gov-badge gov-badge--processing">Signaux certifiés</span>
@@ -186,7 +192,10 @@
                     <section class="gov-panel" aria-labelledby="chart-registry-title">
                         <div class="gov-section-header">
                             <div>
-                                <h2 id="chart-registry-title" class="gov-section-title">Statut de vérification externe</h2>
+                                <h2 id="chart-registry-title" class="gov-section-title">
+                                    Statut de vérification externe
+                                    <button type="button" class="gov-tooltip-trigger" data-tooltip="Situation administrative du dossier au regard de la vérification dans les bases d’immatriculation d’entreprises." aria-label="Statut de vérification externe : Situation administrative du dossier au regard de la vérification dans les bases d’immatriculation" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Situation administrative du dossier au regard de la vérification dans les bases d’immatriculation d’entreprises.</span></button>
+                                </h2>
                                 <p class="gov-panel__subtitle">Concordance avec les données d’immatriculation.</p>
                             </div>
                             <span class="gov-badge gov-badge--review">Registre</span>
@@ -208,7 +217,16 @@
                         </div>
                         <div class="gov-table-wrapper">
                             <table class="gov-table gov-table--striped">
-                                <thead><tr><th>Dossier / page</th><th>Priorité d’examen</th><th>Activité commerciale</th><th>Indices transactionnels</th><th>Dernière mise à jour</th><th>Actions</th></tr></thead>
+                                <thead>
+                                    <tr>
+                                        <th>Dossier / page</th>
+                                        <th>Priorité d’examen <button type="button" class="gov-tooltip-trigger" data-tooltip="Indicateur composite (0–100) pondérant l’activité commerciale (45 %), les preuves transactionnelles (30 %) et l’activité économique (25 %). Seuil d’examen prioritaire ≥ 75,0." aria-label="Priorité d’examen" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Indicateur composite (0–100) pondérant l’activité commerciale (45 %), les preuves transactionnelles (30 %) et l’activité économique (25 %). Seuil d’examen prioritaire ≥ 75,0.</span></button></th>
+                                        <th>Activité commerciale <button type="button" class="gov-tooltip-trigger" data-tooltip="Sous-score (0–100, coef. 45 %) évaluant l’intention de vente : densité des prix affichés, termes de catalogue, gestion de stocks, promotions et récurrence des offres." aria-label="Activité commerciale" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Sous-score (0–100, coef. 45 %) évaluant l’intention de vente : densité des prix affichés, termes de catalogue, gestion de stocks, promotions et récurrence des offres.</span></button></th>
+                                        <th>Indices transactionnels <button type="button" class="gov-tooltip-trigger" data-tooltip="Sous-score (0–100, coef. 30 %) mesurant les modalités de vente concrètes : commandes par messagerie (MP), livraison sur toute la Tunisie, paiement à la livraison (COD)." aria-label="Indices transactionnels" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Sous-score (0–100, coef. 30 %) mesurant les modalités de vente concrètes : commandes par messagerie (MP), livraison sur toute la Tunisie, paiement à la livraison (COD).</span></button></th>
+                                        <th>Dernière mise à jour</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
                                 <tbody id="dashboard-review-body"><tr><td colspan="6" class="cell-empty">Chargement des dossiers…</td></tr></tbody>
                             </table>
                         </div>
@@ -236,7 +254,19 @@
                 <div class="dashboard-grid">
                     <section class="gov-panel gov-panel--flush dashboard-panel--wide" aria-labelledby="dashboard-activity-title">
                         <div class="gov-panel__header"><div><h2 id="dashboard-activity-title" class="gov-panel__title">Activité récente des cibles</h2><p class="gov-panel__subtitle">Derniers enregistrements actualisés dans la file.</p></div><button class="gov-btn gov-btn--ghost gov-btn--sm" type="button" data-dashboard-view="view-targets">Ouvrir les cibles</button></div>
-                        <div class="gov-table-wrapper"><table class="gov-table gov-table--striped"><thead><tr><th>Cible</th><th>Mode</th><th>Statut</th><th>Score rapide</th><th>Score final</th><th>Dernière mise à jour</th></tr></thead><tbody id="dashboard-activity-body"><tr><td colspan="6" class="cell-empty">Chargement de l’activité…</td></tr></tbody></table></div>
+                        <div class="gov-table-wrapper"><table class="gov-table gov-table--striped">
+                            <thead>
+                                <tr>
+                                    <th>Cible</th>
+                                    <th>Mode <button type="button" class="gov-tooltip-trigger" data-tooltip="Stratégie d’extraction : Rapide (QUICK, 3–5 publications) ou Approfondi (DEEP, analyse complète)." aria-label="Mode de collecte" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Stratégie d’extraction : Rapide (QUICK, 3–5 publications) ou Approfondi (DEEP, analyse complète).</span></button></th>
+                                    <th>Statut <button type="button" class="gov-tooltip-trigger" data-tooltip="État d’avancement dans la chaîne de traitement (En attente, Collecte, Terminé, Bloqué, Échec)." aria-label="Statut opérationnel" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">État d’avancement dans la chaîne de traitement (En attente, Collecte, Terminé, Bloqué, Échec).</span></button></th>
+                                    <th>Score rapide <button type="button" class="gov-tooltip-trigger" data-tooltip="Score de pré-filtrage déterministe (0–100) calculé sur les 3 à 5 premières publications sans modèle IA. Promotion vers approfondi si ≥ 30." aria-label="Score rapide" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Score de pré-filtrage déterministe (0–100) calculé sur les 3 à 5 premières publications sans modèle IA. Promotion vers approfondi si ≥ 30.</span></button></th>
+                                    <th>Score final <button type="button" class="gov-tooltip-trigger" data-tooltip="Score consolidé après collecte approfondie et détection des preuves matérielles, intégrant Gemini." aria-label="Score final" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Score consolidé après collecte approfondie et détection des preuves matérielles, intégrant Gemini.</span></button></th>
+                                    <th>Dernière mise à jour</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dashboard-activity-body"><tr><td colspan="6" class="cell-empty">Chargement de l’activité…</td></tr></tbody>
+                        </table></div>
                     </section>
                     <section class="gov-panel dashboard-panel--side" aria-labelledby="dashboard-verification-title">
                         <div class="dashboard-section-heading"><div><h2 id="dashboard-verification-title" class="gov-panel__title">Vérification externe</h2><p class="gov-panel__subtitle">Processus administratif distinct ; non vérifié ne signifie pas non enregistré.</p></div><button class="gov-btn gov-btn--ghost gov-btn--sm" type="button" data-dashboard-view="view-fiscal">Ouvrir la vérification</button></div>
@@ -366,12 +396,12 @@
                         <thead>
                             <tr>
                                 <th scope="col">Cible</th>
-                                <th scope="col">Mode</th>
-                                <th scope="col">Statut</th>
-                                <th scope="col">Priorité</th>
-                                <th scope="col">Score rapide</th>
-                                <th scope="col">Score final</th>
-                                <th scope="col">Tentatives</th>
+                                <th scope="col">Mode <button type="button" class="gov-tooltip-trigger" data-tooltip="Stratégie d’extraction : Rapide (QUICK, 3–5 publications) ou Approfondi (DEEP, analyse complète)." aria-label="Mode de collecte" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Stratégie d’extraction : Rapide (QUICK, 3–5 publications) ou Approfondi (DEEP, analyse complète).</span></button></th>
+                                <th scope="col">Statut <button type="button" class="gov-tooltip-trigger" data-tooltip="État d’avancement dans la chaîne de traitement (En attente, Collecte, Terminé, Bloqué, Échec)." aria-label="Statut opérationnel" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">État d’avancement dans la chaîne de traitement (En attente, Collecte, Terminé, Bloqué, Échec).</span></button></th>
+                                <th scope="col">Priorité <button type="button" class="gov-tooltip-trigger" data-tooltip="Niveau d’urgence administratif attribué à la cible pour l’ordonnancement de la file de collecte." aria-label="Priorité de traitement" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Niveau d’urgence administratif attribué à la cible pour l’ordonnancement de la file de collecte.</span></button></th>
+                                <th scope="col">Score rapide <button type="button" class="gov-tooltip-trigger" data-tooltip="Score de pré-filtrage déterministe (0–100) calculé sur les 3 à 5 premières publications sans modèle IA. Promotion si ≥ 30." aria-label="Score rapide" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Score de pré-filtrage déterministe (0–100) calculé sur les 3 à 5 premières publications sans modèle IA. Promotion si ≥ 30.</span></button></th>
+                                <th scope="col">Score final <button type="button" class="gov-tooltip-trigger" data-tooltip="Score consolidé après collecte approfondie et détection des preuves matérielles, intégrant Gemini." aria-label="Score final" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Score consolidé après collecte approfondie et détection des preuves matérielles, intégrant Gemini.</span></button></th>
+                                <th scope="col">Tentatives <button type="button" class="gov-tooltip-trigger" data-tooltip="Nombre d’essais d’exploration effectués par rapport au plafond autorisé (3 essais)." aria-label="Nombre de tentatives" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--bottom" role="tooltip">Nombre d’essais d’exploration effectués par rapport au plafond autorisé (3 essais).</span></button></th>
                                 <th scope="col">Dernière mise à jour</th>
                                 <th scope="col">Actions</th>
                             </tr>
@@ -842,6 +872,6 @@
 
     </main>
 
-    <script src="/static/js/app.js?v=20260926_5"></script>
+    <script src="/static/js/app.js?v=20260926_7"></script>
 </body>
 </html>

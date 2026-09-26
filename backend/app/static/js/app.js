@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    initGlobalTooltip();
     initNavigation();
     initDashboard();
     initTargetForms();
@@ -10,6 +11,214 @@ document.addEventListener('DOMContentLoaded', () => {
     initFilters();
     initSimulationModal();
 });
+
+// ============================================================
+// METRIC EXPLANATIONS & ACCESSIBLE TOOLTIPS (WCAG 2.1 AA)
+// ============================================================
+
+const METRIC_EXPLANATIONS = {
+    // Scores composites et sous-scores
+    'review_priority': 'Indicateur composite (0–100) pondérant l’activité commerciale (45 %), les preuves transactionnelles (30 %) et l’activité économique (25 %). Un score ≥ 75,0 qualifie automatiquement la page pour examen prioritaire par un analyste.',
+    'quick_score': 'Score de pré-filtrage déterministe (0–100) calculé sur les 3 à 5 premières publications sans modèle IA. Un score ≥ 30 déclenche la promotion vers une collecte approfondie (DEEP).',
+    'final_score': 'Score consolidé après collecte approfondie et détection des preuves matérielles, intégrant l’évaluation sémantique Gemini et les indices transactionnels.',
+    'commercial_activity': 'Sous-score (0–100, coef. 45 %) évaluant l’intention de vente : densité des prix affichés, termes de catalogue, gestion de stocks, promotions et récurrence des offres marchandes.',
+    'transaction_evidence': 'Sous-score (0–100, coef. 30 %) mesurant les modalités concrètes de vente : commandes en messagerie privée (MP), livraison sur toute la Tunisie, paiement à la livraison (COD) et boutiques en ligne.',
+    'economic_activity': 'Sous-score (0–100, coef. 25 %) mesurant l’envergure de l’activité : volume des publications, étendue des prix en Dinars (TND), adresses physiques et mention de vente en gros.',
+    'gemini_confidence': 'Niveau de certitude (0–100 %) attribué par l’analyse sémantique Gemini après examen des textes arabes/français et contextualisation des intentions commerciales.',
+
+    // Cartes de synthèse du tableau de bord
+    'targets_pending': 'Nombre d’adresses Facebook enregistrées dans la file d’attente qui n’ont pas encore été prises en charge par un worker de collecte.',
+    'targets_processing': 'Volume de cibles actuellement verrouillées (claimed) ou en cours d’exploration active (crawling) par les agents.',
+    'pages_in_review_queue': 'Nombre de pages Facebook présentant un score de priorité d’examen ≥ 75,0 en attente de décision de l’analyste administratif.',
+    'targets_completed': 'Nombre total de cibles ayant achevé avec succès leur cycle complet de collecte et d’évaluation indiciaire.',
+    'targets_blocked': 'Cibles dont la collecte a été interrompue (page inaccessible, défi de sécurité, blocage réseau) nécessitant une vérification administrative.',
+    'targets_failed': 'Cibles ayant atteint le nombre maximal de tentatives (3 essais) sans parvenir à finaliser l’extraction des données.',
+
+    // Vue d’ensemble du traitement
+    'total_targets': 'Effectif total des adresses Facebook indexées dans la base de données opérationnelle.',
+    'quick_crawls': 'Nombre d’explorations superficielles (3 à 5 publications) menées pour le pré-filtrage déterministe.',
+    'deep_crawls': 'Nombre d’explorations approfondies (jusqu’à 50 publications et métadonnées détaillées) finalisées.',
+    'conversion_rate': 'Proportion (%) de cibles dont le score rapide a dépassé le seuil de 30 et justifié une collecte approfondie.',
+    'retry_count': 'Nombre de tâches relancées à la suite d’une interruption temporaire ou d’un délai d’attente dépassé.',
+    'failure_rate': 'Pourcentage des cibles n’ayant pas abouti par rapport au volume total enregistré dans le registre.',
+
+    // État du système & supervision
+    'worker_status': 'Disponibilité opérationnelle du service de tâche de fond asynchrone orchestrant les requêtes de collecte.',
+    'crawl_success_rate': 'Proportion de collectes achevées sans incident par rapport à la totalité des tâches déclenchées.',
+    'gemini_success_rate': 'Taux d’appels à l’API Gemini ayant produit une analyse structurée exploitable sans erreur d’inférence.',
+    'queue_depth': 'Cumul des cibles en attente, prises en charge et en cours d’exploration active.',
+    'latency': 'Temps moyen de réponse (en millisecondes) lors des sollicitations d’inférence sémantique Gemini.',
+    'cached_responses': 'Nombre d’analyses sémantiques réutilisées depuis le cache local pour minimiser la consommation de quotas.',
+    'ambiguity_cases': 'Nombre de cas complexes où l’analyse sémantique a arbitré entre activité commerciale réelle et simple usage personnel/associatif.',
+
+    // Graphiques opérationnels
+    'chart_risk': 'Répartition statistique des cibles selon 4 classes de risque : Faible (<30), Modéré (30-59), Élevé (60-79) et Critique (80-100).',
+    'chart_signals': 'Fréquence d’apparition des preuves matérielles de commerce : téléphone tunisien (+216), mention de livraison, prix en Dinars, commande directe.',
+    'chart_registry': 'Situation administrative du dossier au regard de la vérification dans les bases d’immatriculation d’entreprises.',
+
+    // Indices transactionnels observables
+    'indicator_delivery': 'Détection formelle de mentions de livraison, expédition ou transport vers les gouvernorats tunisiens.',
+    'indicator_price': 'Présence de prix explicites exprimés en Dinars tunisiens (DT, TND, dinars, د.ت) confirmant une offre marchande.',
+    'indicator_order': 'Instructions invitant le public à commander directement par messagerie privée (MP / Inbox) ou par téléphone.',
+    'indicator_contact': 'Numéro de téléphone mobile ou fixe tunisien (+216, 2x, 5x, 7x, 9x) identifiable dans les publications.',
+
+    // Métadonnées des tableaux
+    'table_mode': 'Stratégie d’extraction : Rapide (QUICK, 3–5 publications) ou Approfondi (DEEP, analyse complète).',
+    'table_status': 'État d’avancement de la cible dans la chaîne de traitement (En attente, Collecte, Terminé, Bloqué, Échec).',
+    'table_priority': 'Niveau d’urgence administratif attribué à la cible pour l’ordonnancement de la file de collecte.',
+    'table_attempts': 'Nombre d’essais d’exploration effectués par rapport au plafond autorisé (3 essais).'
+};
+
+function infoTip(keyOrText, placement = 'auto') {
+    const text = METRIC_EXPLANATIONS[keyOrText] || keyOrText || '';
+    const safeText = escapeHtml(text);
+    return `<button type="button" class="gov-tooltip-trigger" data-tooltip="${safeText}" data-tooltip-pos="${placement}" aria-label="${safeText}" tabindex="0"><span class="gov-tooltip-icon" aria-hidden="true">?</span><span class="gov-tooltip-text gov-tooltip-text--${placement}" role="tooltip">${safeText}</span></button>`;
+}
+
+function initGlobalTooltip() {
+    let tooltipEl = document.getElementById('gov-global-tooltip');
+    if (!tooltipEl) {
+        tooltipEl = document.createElement('div');
+        tooltipEl.id = 'gov-global-tooltip';
+        tooltipEl.setAttribute('role', 'tooltip');
+        tooltipEl.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(tooltipEl);
+    }
+    document.body.classList.add('has-global-tooltip');
+
+    let currentTrigger = null;
+
+    function showTooltip(trigger) {
+        currentTrigger = trigger;
+        const text = trigger.getAttribute('data-tooltip') || trigger.querySelector('.gov-tooltip-text')?.textContent;
+        if (!text) return;
+
+        tooltipEl.textContent = text;
+        tooltipEl.setAttribute('aria-hidden', 'false');
+        tooltipEl.classList.add('is-visible');
+        trigger.classList.add('is-active');
+
+        positionTooltip(trigger);
+    }
+
+    function positionTooltip(trigger) {
+        if (!currentTrigger) return;
+        const rect = trigger.getBoundingClientRect();
+        const tipRect = tooltipEl.getBoundingClientRect();
+        const preferredPos = trigger.getAttribute('data-tooltip-pos') || 'auto';
+
+        const viewportWidth = window.innerWidth;
+
+        let placeTop = true;
+        if (preferredPos === 'bottom') {
+            placeTop = false;
+        } else if (preferredPos === 'top') {
+            placeTop = true;
+        } else {
+            if (rect.top < tipRect.height + 24) {
+                placeTop = false;
+            } else {
+                placeTop = true;
+            }
+        }
+
+        let top = 0;
+        if (placeTop) {
+            top = rect.top - tipRect.height - 8;
+            tooltipEl.setAttribute('data-pos', 'top');
+        } else {
+            top = rect.bottom + 8;
+            tooltipEl.setAttribute('data-pos', 'bottom');
+        }
+
+        let left = rect.left + (rect.width / 2) - (tipRect.width / 2);
+        const margin = 12;
+
+        if (left < margin) {
+            left = margin;
+        } else if (left + tipRect.width > viewportWidth - margin) {
+            left = viewportWidth - margin - tipRect.width;
+        }
+
+        const triggerCenter = rect.left + (rect.width / 2);
+        const arrowLeft = Math.max(16, Math.min(tipRect.width - 16, triggerCenter - left));
+        tooltipEl.style.setProperty('--arrow-left', `${arrowLeft}px`);
+
+        tooltipEl.style.top = `${Math.round(top)}px`;
+        tooltipEl.style.left = `${Math.round(left)}px`;
+    }
+
+    function hideTooltip() {
+        if (currentTrigger) {
+            currentTrigger.classList.remove('is-active');
+            currentTrigger = null;
+        }
+        if (tooltipEl) {
+            tooltipEl.classList.remove('is-visible');
+            tooltipEl.setAttribute('aria-hidden', 'true');
+        }
+    }
+
+    document.addEventListener('mouseover', (e) => {
+        const trigger = e.target.closest('.gov-tooltip-trigger');
+        if (trigger) {
+            showTooltip(trigger);
+        }
+    });
+
+    document.addEventListener('mouseout', (e) => {
+        const trigger = e.target.closest('.gov-tooltip-trigger');
+        if (trigger && currentTrigger === trigger) {
+            hideTooltip();
+        }
+    });
+
+    document.addEventListener('focusin', (e) => {
+        const trigger = e.target.closest('.gov-tooltip-trigger');
+        if (trigger) {
+            showTooltip(trigger);
+        }
+    });
+
+    document.addEventListener('focusout', (e) => {
+        const trigger = e.target.closest('.gov-tooltip-trigger');
+        if (trigger && currentTrigger === trigger) {
+            hideTooltip();
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        const trigger = e.target.closest('.gov-tooltip-trigger');
+        if (trigger) {
+            e.stopPropagation();
+            if (currentTrigger === trigger && tooltipEl.classList.contains('is-visible')) {
+                hideTooltip();
+            } else {
+                showTooltip(trigger);
+            }
+        } else {
+            hideTooltip();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' || e.key === 'Esc') {
+            hideTooltip();
+        }
+    });
+
+    window.addEventListener('scroll', () => {
+        if (currentTrigger && tooltipEl.classList.contains('is-visible')) {
+            positionTooltip(currentTrigger);
+        }
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+        if (currentTrigger && tooltipEl.classList.contains('is-visible')) {
+            positionTooltip(currentTrigger);
+        }
+    }, { passive: true });
+}
 
 // ============================================================
 // PRIORITY MAPPING
@@ -174,47 +383,81 @@ async function loadDashboard() {
 
 function renderDashboardSummary(m) {
     const stats = [
-        ['Cibles en attente de traitement', m.targets_pending, 'En attente dans la file', 'pending'],
-        ['Traitements en cours', (m.targets_claimed || 0) + (m.targets_crawling || 0), 'Pris en charge ou en collecte', 'processing'],
-        ['Dossiers à examiner', m.pages_in_review_queue, 'File selon le seuil de priorité', 'review'],
-        ['Terminés aujourd’hui', m.targets_completed, 'Cibles traitées', 'completed'],
-        ['Cibles bloquées', m.targets_blocked, 'Nécessitent une intervention', 'blocked'],
-        ['Emplois en échec', m.targets_failed, 'Après une tentative de traitement', 'failed'],
+        ['Cibles en attente de traitement', m.targets_pending, 'En attente dans la file', 'pending', 'targets_pending'],
+        ['Traitements en cours', (m.targets_claimed || 0) + (m.targets_crawling || 0), 'Pris en charge ou en collecte', 'processing', 'targets_processing'],
+        ['Dossiers à examiner', m.pages_in_review_queue, 'File selon le seuil de priorité', 'review', 'pages_in_review_queue'],
+        ['Terminés aujourd’hui', m.targets_completed, 'Cibles traitées', 'completed', 'targets_completed'],
+        ['Cibles bloquées', m.targets_blocked, 'Nécessitent une intervention', 'blocked', 'targets_blocked'],
+        ['Emplois en échec', m.targets_failed, 'Après une tentative de traitement', 'failed', 'targets_failed'],
     ];
-    document.getElementById('dashboard-summary').innerHTML = stats.map(([label, value, context, tone]) => `
-        <div class="dashboard-summary-card"><div class="dashboard-summary-card__label">${label}</div><div class="dashboard-summary-card__value">${value ?? 0}</div><div class="dashboard-summary-card__context"><span class="dashboard-status-dot dashboard-status-dot--${tone}"></span>${context}</div></div>
+    document.getElementById('dashboard-summary').innerHTML = stats.map(([label, value, context, tone, tipKey]) => `
+        <div class="dashboard-summary-card">
+            <div class="dashboard-summary-card__label">${label} ${infoTip(tipKey, 'bottom')}</div>
+            <div class="dashboard-summary-card__value">${value ?? 0}</div>
+            <div class="dashboard-summary-card__context"><span class="dashboard-status-dot dashboard-status-dot--${tone}"></span>${context}</div>
+        </div>
     `).join('');
 }
 
 function renderDashboardProcessing(m) {
     const conversion = m.quick_crawls ? `${Math.round((m.pages_promoted_quick_to_deep / m.quick_crawls) * 100)}%` : '–';
-    const rows = [['Total des cibles dans la file', m.total_targets], ['Collectes rapides terminées', m.quick_crawls], ['Collectes approfondies terminées', m.deep_crawls], ['Conversion rapide vers approfondie', conversion], ['Nouvelles tentatives', m.targets_retry ? `${m.targets_retry} cible${m.targets_retry > 1 ? 's' : ''}` : '0 cible'], ['Taux bloqué ou en échec', m.total_targets ? `${Math.round(((m.targets_blocked + m.targets_failed) / m.total_targets) * 100)} %` : '0 %']];
-    document.getElementById('dashboard-processing').innerHTML = rows.map(([label, value]) => `<div class="dashboard-stat-row"><span>${label}</span><strong>${value ?? '–'}</strong></div>`).join('');
+    const rows = [
+        ['Total des cibles dans la file', m.total_targets, 'total_targets'],
+        ['Collectes rapides terminées', m.quick_crawls, 'quick_crawls'],
+        ['Collectes approfondies terminées', m.deep_crawls, 'deep_crawls'],
+        ['Conversion rapide vers approfondie', conversion, 'conversion_rate'],
+        ['Nouvelles tentatives', m.targets_retry ? `${m.targets_retry} cible${m.targets_retry > 1 ? 's' : ''}` : '0 cible', 'retry_count'],
+        ['Taux bloqué ou en échec', m.total_targets ? `${Math.round(((m.targets_blocked + m.targets_failed) / m.total_targets) * 100)} %` : '0 %', 'failure_rate']
+    ];
+    document.getElementById('dashboard-processing').innerHTML = rows.map(([label, value, tipKey]) => `
+        <div class="dashboard-stat-row">
+            <span>${label} ${infoTip(tipKey)}</span>
+            <strong>${value ?? '–'}</strong>
+        </div>
+    `).join('');
 }
 
 function renderDashboardMonitoring(m) {
-    const rows = [['État du worker', 'Opérationnel'], ['Taux de réussite des collectes', m.total_targets ? `${Math.round((m.targets_completed / m.total_targets) * 100)} %` : '–'], ['Réussite de l’analyse automatisée', m.gemini_calls ? `${Math.round((m.successful_calls / m.gemini_calls) * 100)} %` : 'Aucun appel enregistré'], ['Profondeur de la file', m.targets_pending + m.targets_claimed + m.targets_crawling], ['Pages bloquées', m.targets_blocked], ['Dernière actualisation système', formatTime(new Date())]];
-    document.getElementById('dashboard-monitoring').innerHTML = rows.map(([label, value]) => `<div class="dashboard-stat-row"><span>${label}</span><strong>${value ?? '–'}</strong></div>`).join('');
+    const rows = [
+        ['État du worker', 'Opérationnel', 'worker_status'],
+        ['Taux de réussite des collectes', m.total_targets ? `${Math.round((m.targets_completed / m.total_targets) * 100)} %` : '–', 'crawl_success_rate'],
+        ['Réussite de l’analyse automatisée', m.gemini_calls ? `${Math.round((m.successful_calls / m.gemini_calls) * 100)} %` : 'Aucun appel enregistré', 'gemini_success_rate'],
+        ['Profondeur de la file', (m.targets_pending || 0) + (m.targets_claimed || 0) + (m.targets_crawling || 0), 'queue_depth'],
+        ['Pages bloquées', m.targets_blocked ?? 0, 'targets_blocked'],
+        ['Dernière actualisation système', formatTime(new Date()), '']
+    ];
+    document.getElementById('dashboard-monitoring').innerHTML = rows.map(([label, value, tipKey]) => `
+        <div class="dashboard-stat-row">
+            <span>${label} ${tipKey ? infoTip(tipKey) : ''}</span>
+            <strong>${value ?? '–'}</strong>
+        </div>
+    `).join('');
 }
 
 function renderDashboardReviews(items) {
     const body = document.getElementById('dashboard-review-body');
-    body.innerHTML = items.length ? items.map(item => `<tr><td><strong>${escapeHtml(item.page_name || 'Page Facebook')}</strong><br><a class="dashboard-table-subtext" href="${escapeHtml(item.canonical_url)}" target="_blank">${escapeHtml(item.canonical_url)}</a></td><td>${scoreMarkup(item.review_priority)}</td><td>${scoreMarkup(item.commercial_activity)}</td><td>${scoreMarkup(item.transaction_evidence)}</td><td>${formatDate(item.calculated_at)}</td><td><button class="gov-btn gov-btn--secondary gov-btn--sm" type="button" onclick="openCaseFromView('${item.page_id}', 'view-dashboard')">Examiner le dossier</button></td></tr>`).join('') : '<tr><td colspan="6" class="cell-empty">Aucun dossier ne nécessite actuellement d’examen.</td></tr>';
+    body.innerHTML = items.length ? items.map(item => `<tr><td><strong>${escapeHtml(item.page_name || 'Page Facebook')}</strong><br><a class="dashboard-table-subtext" href="${escapeHtml(item.canonical_url)}" target="_blank">${escapeHtml(item.canonical_url)}</a></td><td>${scoreMarkup(item.review_priority, 'review_priority')}</td><td>${scoreMarkup(item.commercial_activity, 'commercial_activity')}</td><td>${scoreMarkup(item.transaction_evidence, 'transaction_evidence')}</td><td>${formatDate(item.calculated_at)}</td><td><button class="gov-btn gov-btn--secondary gov-btn--sm" type="button" onclick="openCaseFromView('${item.page_id}', 'view-dashboard')">Examiner le dossier</button></td></tr>`).join('') : '<tr><td colspan="6" class="cell-empty">Aucun dossier ne nécessite actuellement d’examen.</td></tr>';
 }
 
 function renderDashboardActivity(targets) {
     const body = document.getElementById('dashboard-activity-body');
-    body.innerHTML = targets.length ? targets.slice(0, 7).map(t => `<tr><td class="cell-url"><a href="${escapeHtml(t.canonical_url || t.url)}" target="_blank">${escapeHtml(t.canonical_url || t.url)}</a></td><td><span class="gov-badge gov-badge--mode">${t.crawl_mode === 'QUICK' ? 'Rapide' : t.crawl_mode === 'DEEP' ? 'Approfondi' : '–'}</span></td><td><span class="gov-badge ${STATUS_BADGE_MAP[t.status] || 'gov-badge--pending'}">${STATUS_LABELS[t.status] || t.status}</span></td><td>${scoreMarkup(t.quick_score)}</td><td>${scoreMarkup(t.final_score)}</td><td>${formatDate(t.updated_at)}</td></tr>`).join('') : '<tr><td colspan="6" class="cell-empty">Aucune activité de cible enregistrée.</td></tr>';
+    body.innerHTML = targets.length ? targets.slice(0, 7).map(t => `<tr><td class="cell-url"><a href="${escapeHtml(t.canonical_url || t.url)}" target="_blank">${escapeHtml(t.canonical_url || t.url)}</a></td><td><span class="gov-badge gov-badge--mode">${t.crawl_mode === 'QUICK' ? 'Rapide' : t.crawl_mode === 'DEEP' ? 'Approfondi' : '–'}</span></td><td><span class="gov-badge ${STATUS_BADGE_MAP[t.status] || 'gov-badge--pending'}">${STATUS_LABELS[t.status] || t.status}</span></td><td>${scoreMarkup(t.quick_score, 'quick_score')}</td><td>${scoreMarkup(t.final_score, 'final_score')}</td><td>${formatDate(t.updated_at)}</td></tr>`).join('') : '<tr><td colspan="6" class="cell-empty">Aucune activité de cible enregistrée.</td></tr>';
 }
 
 function renderDashboardVerification(reviews) {
-    const counts = [['Non vérifié', 0, 'pending'], ['Vérification en attente', 0, 'processing'], ['Correspondance confirmée', 0, 'completed'], ['Aucune correspondance confirmée', 0, 'blocked'], ['Résultat non concluant', 0, 'review']];
+    const counts = [
+        ['Non vérifié', 0, 'pending', 'Situation où aucune démarche d’immatriculation n’a encore été vérifiée.'],
+        ['Vérification en attente', 0, 'processing', 'Vérification en cours de traitement administratif auprès du registre.'],
+        ['Correspondance confirmée', 0, 'completed', 'Données de la page concordantes avec une entité légalement enregistrée.'],
+        ['Aucune correspondance confirmée', 0, 'blocked', 'Absence totale d’immatriculation fiscale ou commerciale enregistrée.'],
+        ['Résultat non concluant', 0, 'review', 'Éléments d’identification insuffisants ou contradictoires.']
+    ];
     reviews.forEach(item => {
         const label = UI_TEXT.registry[item.registry_status] || item.registry_status;
         const row = counts.find(([name]) => name === label);
         if (row) row[1] += 1;
     });
-    document.getElementById('dashboard-verification').innerHTML = counts.map(([label, value, tone]) => `<div class="dashboard-stat-row"><span><span class="dashboard-status-dot dashboard-status-dot--${tone}"></span>${label}</span><strong>${value}</strong></div>`).join('');
+    document.getElementById('dashboard-verification').innerHTML = counts.map(([label, value, tone, tip]) => `<div class="dashboard-stat-row"><span><span class="dashboard-status-dot dashboard-status-dot--${tone}"></span>${label} ${infoTip(tip)}</span><strong>${value}</strong></div>`).join('');
 }
 
 function renderDashboardAlerts(m) {
@@ -231,10 +474,11 @@ function renderDashboardAudit(m, targets) {
     document.getElementById('dashboard-audit').innerHTML = events.map(([actor, action, result]) => `<div class="dashboard-audit-row"><time>${formatTime(new Date())}</time><strong>${actor}</strong><span>${escapeHtml(action)}</span><span class="gov-badge gov-badge--completed">${escapeHtml(result)}</span></div>`).join('');
 }
 
-function scoreMarkup(score) {
+function scoreMarkup(score, tipKey) {
     if (score == null) return '<span class="gov-text-muted">–</span>';
     const value = Number(score);
-    return `<span class="dashboard-score"><strong>${value.toFixed(0)}</strong><span>/ 100</span><i style="width: ${Math.min(100, Math.max(0, value))}%"></i></span>`;
+    const tip = tipKey ? infoTip(tipKey) : '';
+    return `<span class="dashboard-score"><strong>${value.toFixed(0)}</strong><span>/ 100</span><i style="width: ${Math.min(100, Math.max(0, value))}%"></i>${tip}</span>`;
 }
 
 function formatDate(value) {
@@ -551,6 +795,7 @@ function renderTargetsTablePage() {
                     <span class="gov-score">
                         <span class="gov-score__value">${typeof qScore === 'number' ? qScore.toLocaleString('fr-FR', { maximumFractionDigits: 1 }) : qScore}</span>
                         ${qScore !== '–' ? '<span class="gov-score__max">/ 100</span>' : ''}
+                        ${qScore !== '–' ? infoTip('quick_score') : ''}
                     </span>
                     ${scoreLabel(qScore)}
                 </td>
@@ -558,6 +803,7 @@ function renderTargetsTablePage() {
                     <span class="gov-score">
                         <span class="gov-score__value">${typeof fScore === 'number' ? fScore.toLocaleString('fr-FR', { maximumFractionDigits: 1 }) : fScore}</span>
                         ${fScore !== '–' ? '<span class="gov-score__max">/ 100</span>' : ''}
+                        ${fScore !== '–' ? infoTip('final_score') : ''}
                     </span>
                     ${scoreLabel(fScore)}
                 </td>
@@ -769,7 +1015,7 @@ async function loadReviewQueue() {
                         <div>
                             <div class="gov-flex gov-flex--center gov-flex--gap-sm" style="flex-wrap: wrap;">
                                 <h3 style="margin: 0; font-size: 1rem; font-weight: 600;">${escapeHtml(item.page_name || 'Page Facebook')}</h3>
-                                <span class="gov-badge gov-badge--review">Priorité : ${item.review_priority.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} / 100</span>
+                                <span class="gov-badge gov-badge--review">Priorité : ${item.review_priority.toLocaleString('fr-FR', { maximumFractionDigits: 0 })} / 100 ${infoTip('review_priority')}</span>
                                 <span class="gov-badge gov-badge--pending">Vérification : ${UI_TEXT.registry[item.registry_status] || item.registry_status}</span>
                             </div>
                             <a href="${escapeHtml(item.canonical_url)}" target="_blank" style="font-size: 0.8125rem; margin-top: 0.25rem; display: inline-block;">
@@ -784,15 +1030,15 @@ async function loadReviewQueue() {
                     <!-- Score breakdown -->
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 0.75rem; padding: 0.625rem; background: var(--gov-surface-alt); border-radius: var(--gov-radius-card);">
                         <div>
-                            <div class="gov-text-secondary" style="font-size: 0.75rem;">Activité commerciale (45 %)</div>
+                            <div class="gov-text-secondary" style="font-size: 0.75rem;">Activité commerciale (45 %) ${infoTip('commercial_activity')}</div>
                             <div style="font-weight: 600;">${item.commercial_activity.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} <span class="gov-text-muted">/ 100</span></div>
                         </div>
                         <div>
-                            <div class="gov-text-secondary" style="font-size: 0.75rem;">Indices transactionnels (30 %)</div>
+                            <div class="gov-text-secondary" style="font-size: 0.75rem;">Indices transactionnels (30 %) ${infoTip('transaction_evidence')}</div>
                             <div style="font-weight: 600;">${item.transaction_evidence.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} <span class="gov-text-muted">/ 100</span></div>
                         </div>
                         <div>
-                            <div class="gov-text-secondary" style="font-size: 0.75rem;">Activité économique (25 %)</div>
+                            <div class="gov-text-secondary" style="font-size: 0.75rem;">Activité économique (25 %) ${infoTip('economic_activity')}</div>
                             <div style="font-weight: 600;">${item.economic_activity.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} <span class="gov-text-muted">/ 100</span></div>
                         </div>
                     </div>
@@ -1009,15 +1255,15 @@ function renderCaseScores(score) {
     }
 
     const cards = [
-        { label: 'Priorité d’examen', val: score.review_priority_score, weight: 'Indicateur synthétique' },
-        { label: 'Activité commerciale', val: score.commercial_activity_score, weight: 'Pondération 45 %' },
-        { label: 'Indices transactionnels', val: score.transaction_evidence_score, weight: 'Pondération 30 %' },
-        { label: 'Activité économique', val: score.economic_activity_score, weight: 'Pondération 25 %' },
+        { label: 'Priorité d’examen', val: score.review_priority_score, weight: 'Indicateur synthétique', tipKey: 'review_priority' },
+        { label: 'Activité commerciale', val: score.commercial_activity_score, weight: 'Pondération 45 %', tipKey: 'commercial_activity' },
+        { label: 'Indices transactionnels', val: score.transaction_evidence_score, weight: 'Pondération 30 %', tipKey: 'transaction_evidence' },
+        { label: 'Activité économique', val: score.economic_activity_score, weight: 'Pondération 25 %', tipKey: 'economic_activity' },
     ];
 
     grid.innerHTML = cards.map(c => `
         <div class="gov-indicator-card">
-            <div class="gov-indicator-card__label">${c.label}</div>
+            <div class="gov-indicator-card__label">${c.label} ${infoTip(c.tipKey)}</div>
             <div class="gov-indicator-card__value">
                 ${c.val != null ? c.val.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '–'}
                 <span class="gov-text-muted" style="font-size: 0.75rem;">/ 100</span>
@@ -1064,28 +1310,32 @@ function renderCaseTransactionIndicators(posts, score) {
         {
             title: 'Modalité de livraison',
             value: hasDelivery ? 'Détectée (Toute la Tunisie)' : 'Non constatée',
-            state: hasDelivery ? 'completed' : 'pending'
+            state: hasDelivery ? 'completed' : 'pending',
+            tipKey: 'indicator_delivery'
         },
         {
             title: 'Tarification explicite',
             value: hasPrice ? 'Constatée en dinars (DT)' : 'Tarification sur demande',
-            state: hasPrice ? 'completed' : 'pending'
+            state: hasPrice ? 'completed' : 'pending',
+            tipKey: 'indicator_price'
         },
         {
             title: 'Canaux de commande',
             value: hasOrder ? 'Actifs (Message privé / MP)' : 'Prise de contact libre',
-            state: hasOrder ? 'completed' : 'pending'
+            state: hasOrder ? 'completed' : 'pending',
+            tipKey: 'indicator_order'
         },
         {
             title: 'Ligne directe commerciale',
             value: hasContact ? 'Numéro direct identifié' : 'Formulaire web ou aucun',
-            state: hasContact ? 'completed' : 'pending'
+            state: hasContact ? 'completed' : 'pending',
+            tipKey: 'indicator_contact'
         }
     ];
 
     container.innerHTML = indicators.map(ind => `
         <div class="gov-indicator-card">
-            <div class="gov-indicator-card__label">${ind.title}</div>
+            <div class="gov-indicator-card__label">${ind.title} ${infoTip(ind.tipKey)}</div>
             <div class="gov-indicator-card__value">
                 <span class="dashboard-status-dot dashboard-status-dot--${ind.state}"></span>
                 ${ind.value}
@@ -1351,23 +1601,26 @@ async function loadMetrics() {
         const m = await res.json();
 
         const cards = [
-            { label: 'Total des cibles', val: m.total_targets },
-            { label: 'Cibles en attente', val: m.targets_pending },
-            { label: 'Cibles terminées', val: m.targets_completed },
-            { label: 'Cibles bloquées', val: m.targets_blocked },
-            { label: 'Analyses rapides', val: m.quick_crawls },
-            { label: 'Analyses approfondies', val: m.deep_crawls },
-            { label: 'Promues vers l’approfondi', val: m.pages_promoted_quick_to_deep },
-            { label: 'Dossiers à examiner', val: m.pages_in_review_queue },
-            { label: 'Pages analysées', val: m.total_pages_stored },
-            { label: 'Publications collectées', val: m.total_posts_collected },
-            { label: 'Indices extraits', val: m.total_signals_extracted },
-            { label: 'Priorité moyenne d’examen', val: m.average_review_priority != null ? m.average_review_priority.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '–' },
+            { label: 'Total des cibles', val: m.total_targets, tipKey: 'total_targets' },
+            { label: 'Cibles en attente', val: m.targets_pending, tipKey: 'targets_pending' },
+            { label: 'Cibles terminées', val: m.targets_completed, tipKey: 'targets_completed' },
+            { label: 'Cibles bloquées', val: m.targets_blocked, tipKey: 'targets_blocked' },
+            { label: 'Analyses rapides', val: m.quick_crawls, tipKey: 'quick_crawls' },
+            { label: 'Analyses approfondies', val: m.deep_crawls, tipKey: 'deep_crawls' },
+            { label: 'Promues vers l’approfondi', val: m.pages_promoted_quick_to_deep, tipKey: 'conversion_rate' },
+            { label: 'Dossiers à examiner', val: m.pages_in_review_queue, tipKey: 'pages_in_review_queue' },
+            { label: 'Pages analysées', val: m.total_pages_stored, tipKey: 'Total des entités uniques de pages Facebook enregistrées dans le système.' },
+            { label: 'Publications collectées', val: m.total_posts_collected, tipKey: 'Volume total de publications publiques Facebook extraites et conservées.' },
+            { label: 'Indices extraits', val: m.total_signals_extracted, tipKey: 'Total cumulé des indices matériels et signaux transactionnels détectés.' },
+            { label: 'Priorité moyenne d’examen', val: m.average_review_priority != null ? m.average_review_priority.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : '–', tipKey: 'Moyenne arithmétique de la priorité d’examen sur l’ensemble des pages évaluées.' },
         ];
 
         grid.innerHTML = cards.map(c => `
             <div style="background: var(--gov-surface-alt); border: 1px solid var(--gov-border); border-radius: var(--gov-radius-card); padding: 0.875rem;">
-                <div class="gov-text-secondary" style="font-size: 0.75rem; margin-bottom: 0.2rem;">${c.label}</div>
+                <div class="gov-text-secondary" style="font-size: 0.75rem; margin-bottom: 0.2rem; display: flex; align-items: center; justify-content: space-between;">
+                    <span>${c.label}</span>
+                    ${infoTip(c.tipKey)}
+                </div>
                 <div style="font-size: 1.25rem; font-weight: 700; color: var(--gov-text-primary);">${c.val}</div>
             </div>
         `).join('');
@@ -1375,19 +1628,22 @@ async function loadMetrics() {
         const aiGrid = document.getElementById('ai-metrics-grid');
         if (aiGrid) {
             const aiCards = [
-                { label: 'Appels d’analyse', val: m.gemini_calls ?? m.gemini_calls_total ?? 0 },
-                { label: 'Appels réussis', val: m.successful_calls ?? m.gemini_calls_successful ?? 0 },
-                { label: 'Appels en échec', val: m.failed_calls ?? m.gemini_calls_failed ?? 0 },
-                { label: 'Réponses mises en cache', val: m.cached_responses ?? m.gemini_cached_responses ?? 0 },
-                { label: 'Latence moyenne', val: `${(m.average_latency_ms ?? m.gemini_avg_latency_ms ?? 0).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} ms` },
-                { label: 'Publications analysées', val: m.posts_analyzed ?? m.gemini_posts_analyzed ?? 0 },
-                { label: 'Pages analysées', val: m.pages_analyzed ?? 0 },
-                { label: 'Ambiguïtés résolues', val: m.ambiguity_cases_resolved ?? m.gemini_ambiguity_cases_resolved ?? 0 },
+                { label: 'Appels d’analyse', val: m.gemini_calls ?? m.gemini_calls_total ?? 0, tipKey: 'Volume total de requêtes adressées au service d’analyse sémantique Gemini.' },
+                { label: 'Appels réussis', val: m.successful_calls ?? m.gemini_calls_successful ?? 0, tipKey: 'gemini_success_rate' },
+                { label: 'Appels en échec', val: m.failed_calls ?? m.gemini_calls_failed ?? 0, tipKey: 'Nombre de requêtes d’analyse ayant rencontré une erreur réseau ou un dépassement de quota.' },
+                { label: 'Réponses mises en cache', val: m.cached_responses ?? m.gemini_cached_responses ?? 0, tipKey: 'cached_responses' },
+                { label: 'Latence moyenne', val: `${(m.average_latency_ms ?? m.gemini_avg_latency_ms ?? 0).toLocaleString('fr-FR', { maximumFractionDigits: 0 })} ms`, tipKey: 'latency' },
+                { label: 'Publications analysées', val: m.posts_analyzed ?? m.gemini_posts_analyzed ?? 0, tipKey: 'Nombre cumulé de publications examinées par le modèle d’IA.' },
+                { label: 'Pages analysées', val: m.pages_analyzed ?? 0, tipKey: 'Nombre de pages Facebook complètes ayant fait l’objet d’un profilage sémantique.' },
+                { label: 'Ambiguïtés résolues', val: m.ambiguity_cases_resolved ?? m.gemini_ambiguity_cases_resolved ?? 0, tipKey: 'ambiguity_cases' },
             ];
 
             aiGrid.innerHTML = aiCards.map(c => `
                 <div style="background: var(--gov-surface-alt); border: 1px solid var(--gov-border); border-radius: var(--gov-radius-card); padding: 0.875rem;">
-                    <div class="gov-text-secondary" style="font-size: 0.75rem; margin-bottom: 0.2rem;">${c.label}</div>
+                    <div class="gov-text-secondary" style="font-size: 0.75rem; margin-bottom: 0.2rem; display: flex; align-items: center; justify-content: space-between;">
+                        <span>${c.label}</span>
+                        ${infoTip(c.tipKey)}
+                    </div>
                     <div style="font-size: 1.25rem; font-weight: 700; color: var(--gov-text-primary);">${c.val}</div>
                 </div>
             `).join('');
